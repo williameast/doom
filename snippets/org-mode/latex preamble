@@ -1,0 +1,19 @@
+# -*- mode: snippet -*-
+# name: latex preamble
+# key: latexpreamb
+# --
+# Self-explanatory, will generate your name when compiled.
+#+AUTHOR: William East
+
+# This one removes the default Table of Contents, to save space:
+#+OPTIONS: toc:nil
+
+# The default LaTeX class is article,
+#+LATEX_CLASS: report
+
+# Options to modify the class. E.g. font size.
+#+LATEX_CLASS_OPTIONS: [11pt,breaklines=true]
+
+# Other LaTeX code that you'd need in the preamble, notably, using packages.
+#+LATEX_HEADER: \usepackage[margin=2cm]{geometry}
+#+LATEX_HEADER: \usepackage{setspace}
