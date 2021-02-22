@@ -18,7 +18,11 @@ basics
 
 ** The Wishlist!
 *** [[https://github.com/alphapapa/burly.el][burly.el]]
-This package provides tools to save and restore frame and window configurations in Emacs, including buffers that may not be live anymore. In this way, it’s like a lightweight “workspace” manager, allowing you to easily restore one or more frames, including their windows, the windows’ layout, and their buffers.
+This package provides tools to save and restore frame and window configurations
+in Emacs, including buffers that may not be live anymore. In this way, it’s like
+a lightweight “workspace” manager, allowing you to easily restore one or more
+frames, including their windows, the windows’ layout, and their buffers.
+
 
 
 * Background personal information
@@ -41,8 +45,6 @@ This is my setup for Mu4e, using mbsync. all my email currently lands in
     (mu4e-compose-signature . "---\nWilliam East"))
   t)
 #+END_SRC
-
-#+RESULTS:
 
 ** TODO adjust the [[file:~/.mbsyncrc::"IMAPStore" section needs to reference the account. This is not][.mbsyncrc]] to accept other emails
 * TODO Language and Localisation
@@ -140,10 +142,8 @@ normal state
 #+end_src
 ** Sideline
 #+begin_src elisp :tangle yes
-
 (setq display-line-numbers-type 'relative) ;; either `nil' or `relative'
 #+end_src
-
 * TODO Org
 ** General
 #+begin_src elisp :tangle yes
@@ -170,65 +170,55 @@ normal state
 
 (setq org-journal-enable-agenda-integration t)
 #+end_src
-** TODO Super-agenda
+** TODO Agenda
+#+begin_src elisp :tangle yes
+
+;; set shortcut for agenda view
+
+#+end_src
+
 ** KILL org-capture
 #+begin_src elisp :tangle no
-(after! org
-  (add-to-list 'org-capture-templates
-             '(("l" "Linus Questions" entry
-               (file+headline "~/org/linus.org")
-               "* TODO %?n"
-               :prepend t :kill-buffer t))
+;; This function was found on a stackoverflow post -> https://stackoverflow.com/questions/6681407/org-mode-capture-with-sexp
+(defun get-page-title (url)
+  "Get title of web page, whose url can be found in the current line"
+  ;; Get title of web page, with the help of functions in url.el
+  (with-current-buffer (url-retrieve-synchronously url)
+    ;; find title by grep the html code
+    (goto-char 0)
+    (re-search-forward "<title>\\([^<]*\\)</title>" nil t 1)
+    (setq web_title_str (match-string 1))
+    ;; find charset by grep the html code
+    (goto-char 0)
+
+    ;; find the charset, assume utf-8 otherwise
+    (if (re-search-forward "charset=\\([-0-9a-zA-Z]*\\)" nil t 1)
+        (setq coding_charset (downcase (match-string 1)))
+      (setq coding_charset "utf-8")
+      ;; decode the string of title.
+      (setq web_title_str (decode-coding-string web_title_str (intern
+                                                               coding_charset))))
+    (concat "[[" url "][" web_title_str "]]")))
 #+end_src
+
+#+RESULTS:
+: get-page-title
+
 * TODO Tex
 ** KILL Auctex
 This is just a bunch of stuff i hacked together from the internet. No idea how
 it works.
-#+begin_src elisp :tangle no
-;; auctex
-(use-package auctex
-  :ensure t
-  :after latex
-  :init
-  (setq tab-width 2
-        LaTeX-item-indent 0 latex "latex"
-        pdf-latex-command "xelatex"
-        TeX-view-program-selection '((output-pdf "PDF Tools"))
-        TeX-view-program-list
-        '(("PDF Tools" TeX-pdf-tools-sync-view)))
-  (setq-default TeX-engine 'xetex)
-  (add-hook
-   'TeX-after-compilation-finished-functions
-   #'TeX-revert-document-buffer)
-  :hook
-  ;; (TeX-after-compilation-finished-functions
-  ;;  . TeX-revert-document-buffer)
-  (LaTeX-mode .
-              (lambda()
-                (add-to-list
-                 'TeX-command-list
-                 '("XeLaTeX" "%`xelatex --synctex=1%(mode)%' %t"
-                   TeX-run-TeX nil t))
-                (setq TeX-command-default "XeLaTeX"
-                      TeX-source-correlate-mode t)))
-  :bind (:map LaTeX-mode-map
-              ("C-c C-c" .
-               (lambda (ARG)
-                 (interactive "P")
-                 (save-buffer)
-                 (TeX-command-run-all ARG)))
-              ("C-l <backspace>"
-               . (lambda ()
-                   (interactive)
-                   (TeX-clean)
-                   (message "Cleaned!")))))
-
+#+begin_src elisp :tangle yes
+(setq TeX-auto-save t) ; enable parse on load
+(setq TeX-parse-self t) ; enable parse on save
+(setq-default TeX-master nil)
 #+end_src
 ** TODO Reftex
 this tool is for managing the bibliography. Currently do not have a bib file so
 is left in for later completion.
-#+begin_src elisp :tangle no
-(setq reftex-default-bibliography "/your/bib/file.bib") ;; change the path
+#+begin_src elisp :tangle yes
+(setq reftex-default-bibliography "/home/weast/org/projects/Coding/Latex/testbill/bib.bib") ;; change the path
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)  ;; with AUCTeX LaTeX mode
 #+end_src
 ** KILL PDF viewer
 For previewing the PDFs that latex generates. I have the option of choosing the default order.

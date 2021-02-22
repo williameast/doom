@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name:src python simple 
+# key: srcpy
+# --
+
+#+begin_src python $1
+`%`$0
+#+end_src
