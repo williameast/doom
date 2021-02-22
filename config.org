@@ -6,7 +6,7 @@ Doom Sync after modifying. This config is literate, so needs to be run in
 conjunction with [[file:~/.emacs.d/modules/config/literate/README.org::+TITLE: config/literate][Literate]] to work.
 
 TODO indicates work still needs to be done or functionality is not fully
-understood
+understood.
 
 KILL indicates that a given aspect is not implemented because it is not needed,
 or doesn't apply to the specific application.
