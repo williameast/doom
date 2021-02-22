@@ -49,4 +49,17 @@
 ;; Github packages
 ;; Transcription mode for working with VLC
 (package! transcription-mode
-  :recipe (:host github :repo "skeeto/transcription-mode"))
+  :recipe (:host github
+           :repo "skeeto/transcription-mode"))
+
+;; org-appear, for toggling of emphasis elements in org mode individually
+(package! org-appear
+  :recipe (:host github
+           :repo "awth13/org-appear"))
+
+(package! ox-moderncv
+  :recipe (:host gitlab
+           :repo "Titan-C/org-cv"))
+
+(package! org-super-agenda)
+(package! carbon-now-sh)

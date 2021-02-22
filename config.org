@@ -1,87 +1,87 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
-
-* Overview
-This is my Org file for creating the config.el for Doom Emacs. no need to run
-Doom Sync after modifying. This config is literate, so needs to be run in
-conjunction with [[file:~/.emacs.d/modules/config/literate/README.org::+TITLE: config/literate][Literate]] to work.
-
-TODO indicates work still needs to be done or functionality is not fully
-understood
-
-KILL indicates that a given aspect is not implemented because it is not needed,
-or doesn't apply to the specific application.
-** Useful Links
-[[https://tecosaur.github.io/emacs-config/config.html#windows,code--1][Techosaur's Literate Config]] provides a good orientation of what each module is
-meant to do. It is highly descriptive which is really useful for learning the
-basics
-[[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org][Lissners guide to Doom Emacs]] gives a good overview of basic functionality.
-
-** The Wishlist!
-*** [[https://github.com/alphapapa/burly.el][burly.el]]
-This package provides tools to save and restore frame and window configurations
-in Emacs, including buffers that may not be live anymore. In this way, it’s like
-a lightweight “workspace” manager, allowing you to easily restore one or more
-frames, including their windows, the windows’ layout, and their buffers.
-
-
-
-* Background personal information
-#+begin_src elisp :tangle yes
+#+STARTUP: overview
+#+OPTIONS: toc:nil h:5
+#+TITLE: Literate Doom Emacs configuration
+#+TODO: TODO TESTING | DEACTIVATED BROKEN
+* General
+** Name of User
+#+begin_src emacs-lisp :tangle yes :results silent
 (setq user-full-name "William East"
       user-mail-address "williameast@live.com")
 #+end_src
-* TODO Email
-This is my setup for Mu4e, using mbsync. all my email currently lands in
-~/mail/live/inbox/~
+** TODO Local Machine paths and directories
+#+begin_src emacs-lisp :tangle yes :results silent
+(setq projectile-project-search-path '("/home/weast"
+                                       "~/org/projects"))
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-;; Each path is relative to `+mu4e-mu4e-mail-path', which is ~/.mail by default
-(set-email-account! "live.com"
-  '((mu4e-sent-folder       . "/live/Sent")
-    (mu4e-drafts-folder     . "/live/Drafts")
-    (mu4e-trash-folder      . "/live/Deleted")
-    (mu4e-refile-folder     . "/live/inbox")
-    (smtpmail-smtp-user     . "williameast@live.com")
-    (mu4e-compose-signature . "---\nWilliam East"))
-  t)
-#+END_SRC
+(setq org-directory "~/org/"
+      org-agenda-files "home/weast/org/todo.org")
 
-** TODO adjust the [[file:~/.mbsyncrc::"IMAPStore" section needs to reference the account. This is not][.mbsyncrc]] to accept other emails
-* TODO Language and Localisation
-#+begin_src elisp :tangle yes
-
-(setq ispell-dictionary "en_GB")
-
-(global-set-key (kbd "C-c N")
-  (lambda()(interactive)
-    (ispell-change-dictionary "german")
-    (flyspell-buffer)))
-
+(setq reftex-default-bibliography "/home/weast/org/projects/Coding/Latex/testbill/bib.bib") ;; change the path
 #+end_src
-** TODO Auto-capitalise first letter and add apostrophes to implied contractions
-** TODO add to dictionary short cut on SPC t
-* TODO Rudimentary Settings
-#+begin_src elisp :tangle yes
-
-(setq-default
- window-combination-resize t            ; take window space from all windows not just selected
- x-stretch-cursor t)                    ; stretch cursor to the glyph width
-
-(setq auto-save-default t
-      truncate-string-ellipsis "…")     ; not working currently
-
-(setq line-spacing 0.2)                 ; how great the distance between lines should be
+** Autosave
+#+begin_src emacs-lisp :tangle yes :results silent
+(setq auto-save-default t)
 #+end_src
-* Quality of life
-** KILL Full Screen Emacs on Start-up
-#+begin_src elisp :tangle no
-(if (eq initial-window-system 'x)                 ; if started by emacs command or desktop file
-    (toggle-frame-maximized)
-  (toggle-frame-fullscreen))
+* User Interface
+** Fonts
+#+begin_src emacs-lisp :tangle yes :results silent
+(setq doom-font (font-spec :family "monospace" :size 14))
 #+end_src
-** Window Split lists currently open buffers
-#+begin_src elisp :tangle yes
+** DEACTIVATED Transparency
+CLOSED: [2021-04-10 Sat 12:23]
+#+begin_src emacs-lisp :tangle no :results silent
+(defun my/toggle-transparency ()
+  (interactive)
+  (let ((alpha (frame-parameter nil 'alpha)))
+    (if (eq
+         (if (numberp alpha)
+             alpha
+           (cdr alpha)) ; may also be nil
+         100)
+        (set-frame-parameter nil 'alpha '(93 . 93))
+      (set-frame-parameter nil 'alpha '(100 . 100)))))
+#+end_src
+** Theme
+#+begin_src emacs-lisp :tangle yes :results silent
+(setq doom-theme 'doom-one
+      doom-themes-enable-bold t)
+#+end_src
+** Modeline
+*** Battery indicator
+#+begin_src emacs-lisp :tangle yes :results silent
+(unless (equal "Battery Status not available"
+               (battery))
+  (display-battery-mode 1))
+#+end_src
+*** Time Display
+#+begin_src emacs-lisp :tangle yes :results silent
+(display-time-mode 1)
 
+(setq display-time-24hr-format t
+      display-time-default-load-average nil)
+#+end_src
+*** Encoding indicator
+We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case
+#+begin_src emacs-lisp :tangle yes :results silent
+(defun doom-modeline-conditional-buffer-encoding ()
+  (setq-local doom-modeline-buffer-encoding
+              (unless (or (eq buffer-file-coding-system 'utf-8-unix)
+                          (eq buffer-file-coding-system 'utf-8)))))
+
+(add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
+#+end_src
+** Sideline
+#+begin_src emacs-lisp :tangle yes :results silent
+(setq display-line-numbers-type 'relative)
+#+end_src
+** Start Maximized
+#+begin_src emacs-lisp :tangle yes :results silent
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+#+end_src
+** Window Management
+*** Preview buffers when splitting windows
+#+begin_src emacs-lisp :tangle yes :results silent
 (setq evil-vsplit-window-right t
       evil-split-window-below t)
 
@@ -90,146 +90,490 @@ This is my setup for Mu4e, using mbsync. all my email currently lands in
   (+ivy/switch-buffer))
 
 (setq +ivy-buffer-preview t)
-
 #+end_src
-** TODO Capitalize the first letter of a sentence
-** KILL Make $ go to the real EOL not the visual EOL
-In org-mode, $ does not go to the real end of line, it jumps to the end of
-/visual/ line. Create a real end of line by APPENDING and then going back to
-normal state
-#+begin_src elisp :tangle no
-(defun my/real-end-of-line ()
-      (interactive)
-      (call-interactively 'evil-org-append-line)
-      (call-interactively 'evil-force-normal-state))
-
-(map!
-    :after evil-org
-    :desc (documentation 'evil-org-end-of-line) :n "$"  #'my/real-end-of-line)
-#+end_src
-* Aesthetics
-** Themes and Fonts
-#+begin_src elisp :tangle yes
-
-(setq doom-font (font-spec :family "monospace" :size 14))
-
-(setq doom-theme 'doom-one)
-
+*** Take window space from all windows when splitting
+#+begin_src emacs-lisp :tangle yes :results silent
+(setq window-combination-resize t)
 #+end_src
 
-** Modeline
-#+begin_src elisp :tangle yes
-
-;; battery indicator
-(unless (equal "Battery Status not available"
-               (battery))
-  (display-battery-mode 1))
-
-;; Time display
-(display-time-mode 1)
-
-
-;; Hide encoding unless it is not UTF-8
-
-(defun doom-modeline-conditional-buffer-encoding ()
-  "We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case"
-  (setq-local doom-modeline-buffer-encoding
-              (unless (or (eq buffer-file-coding-system 'utf-8-unix)
-                          (eq buffer-file-coding-system 'utf-8)))))
-
-(add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
-
+** Auto-fill mode
+#+begin_src emacs-lisp :tangle yes :results silent
+(add-hook! 'text-mode-hook 'auto-fill-mode)
 #+end_src
-** Sideline
-#+begin_src elisp :tangle yes
-(setq display-line-numbers-type 'relative) ;; either `nil' or `relative'
+** Completion
+#+begin_src emacs-lisp :tangle yes :results silent
+(after! company-box
+  (setq company-box-max-candidates 10))
 #+end_src
-* TODO Org
-** General
-#+begin_src elisp :tangle yes
-
-;; set the org directory. must be done before org loads!
-(setq org-directory "~/org/")
-
-;; set line wrap to occur at 80 characters, I think
-(add-hook 'text-mode-hook 'auto-fill-mode)
-
-;; set level of subtrees to 9
-(setq org-refile-targets (quote ((nil :maxlevel . 9)
-                                 (org-agenda-files :maxlevel . 9))))
+* Dictionaries and Language
+** Default Dictionary
+#+begin_src emacs-lisp :tangle yes :results silent
+(setq ispell-dictionary "en_GB")
 #+end_src
-** Org-Journal
-#+begin_src elisp :tangle no
+** Switch Dictionary Language
+#+begin_src emacs-lisp :tangle yes :results silent
+(defun my/switch-to-de-dict ()
+  (interactive)
+  (ispell-change-dictionary "de_DE")
+  (flyspell-buffer))
+
+(defun my/switch-to-en-dict ()
+  (interactive)
+  (ispell-change-dictionary "en_GB")
+  (flyspell-buffer))
+#+end_src
+* TODO Email [0/1]
+** TESTING General
+#+begin_src emacs-lisp :tangle yes :results silent
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
+
+(after! mu4e
+  (setq mu4e-compose-complete-addresses 't
+        mu4e-use-fancy-chars 'nil
+        mu4e-sent-messages-behavior 'sent
+        mu4e-compose-format-flowed 't
+        mu4e-update-interval 300
+        mu4e-attachment-dir "~/Downloads/"
+        mu4e-view-html-plaintext-ratio-heuristic 10000
+        smtpmail-debug-info 't
+        mml-secure-openpgp-encrypt-to-self 't)
+
+  (set-email-account! "Live"
+                      '((user-mail-address              . "williameast@live.com")
+                        (user-full-name                 . "William East")
+                        (mu4e-sent-folder               . "/Live/Sent")
+                        (mu4e-drafts-folder             . "/Live/Drafts")
+                        (mu4e-trash-folder              . "/Live/Deleted")
+                        (mu4e-refile-folder             . "/Live/Archive")
+                        (smtpmail-smtp-user             . "williameast@live.com")
+                        (smtpmail-smtp-server           . "smtp-mail.outlook.com")
+                        (smtpmail-stream-type           . ssl)
+                        (smtpmail-smtp-service          . 587))
+                      t)
+  (set-email-account! "McGill"
+                      '((user-mail-address              . "william.east@mail.mcgill.ca")
+                        (user-full-name                 . "William East")
+                        (mu4e-sent-folder               . "/McGill/Sent")
+                        (mu4e-drafts-folder             . "/McGill/Drafts")
+                        (mu4e-trash-folder              . "/McGill/Trash")
+                        (mu4e-refile-folder             . "/McGill/Archive")
+                        (smtpmail-smtp-user             . "williameast@live.com")
+                        (smtpmail-smtp-server           . "outlook.office365.com")
+                        (smtpmail-stream-type           . ssl)
+                        (smtpmail-smtp-service          . 587))
+                      t))
+
+(add-hook 'mu4e-compose-mode-hook (lambda () (use-hard-newlines -1)))
+#+end_src
+* Programming
+** Python
+** Literate Programming
+
+#+begin_src emacs-lisp :tangle yes :results silent
+(after! org
+  (defun org-babel-tangle-jump ()
+    "Jump to tangle file for the source block at point."
+    (interactive)
+    (let (file org-babel-pre-tangle-hook org-babel-post-tangle-hook)
+      (cl-letf (((symbol-function 'write-region) (lambda (start end filename &rest _ignore)
+                                                   (setq file filename)))
+                ((symbol-function 'delete-file) #'ignore))
+        (org-babel-tangle '(4)))
+      (when file
+        (setq file (expand-file-name file))
+        (if (file-readable-p file)
+            (find-file file)
+          (error "Cannot open tangle file %S" file))))))
+#+end_src
+** Scheme
+#+begin_src emacs-lisp :tangle yes :results silent
+(after! geiser-mode
+    (setq geiser-active-implementations '(mit)))
+#+end_src
+* Modules
+** TODO Org [2/5]
+*** General
+#+begin_src emacs-lisp :tangle yes :results silent
+(setq org-use-property-inheritance t
+      org-list-allow-alphabetical t
+      org-export-in-background t
+      org-catch-invisible-edits 'smart)
+(setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a.")))
+#+end_src
+*** TESTING Agenda
+#+begin_src emacs-lisp :tangle no :results silent
+(after! org
+  (use-package! org-super-agenda
+    :after org-agenda
+    :init
+    (setq org-habit-show-done-always-green 't
+          org-agenda-prefix-format
+          '((agenda . " %?-12t% s")
+            (todo . " %i %-12:c")
+            (tags . " %i %-12:c")
+            (search . " %i %-12:c")))
+    (setq org-agenda-window-setup 'current-window)
+    (setq org-agenda-start-day "+0d")
+    (setq org-agenda-span 'day)
+    (setq org-agenda-skip-scheduled-if-done t)
+    (setq org-agenda-skip-deadline-if-done t)
+    (setq org-agenda-start-on-weekday nil)
+    (setq org-agenda-dim-blocked-tasks nil) ;; makes main tasks visible in agenda-view
+    (setq org-agenda-files "~/org/todo.org")
+    (setq org-super-agenda-groups
+          '((:name "Due today"
+             :deadline today)
+            (:name "Overdue"
+             :deadline past)
+            (:name "Due soon"
+             :deadline future)
+            (:name "Habits"
+             :habit t)
+            (:name "Start today"
+             :scheduled today)
+            (:name "Start soon"
+             :scheduled future)
+            (:name "Reschedule or review"
+             :scheduled past)
+            ))
+    :config
+    (org-super-agenda-mode)))
+#+end_src
+*** TODO Helper Functions
+**** Emphasis Management
+#+begin_src emacs-lisp :tangle yes :results silent
+(use-package! org-appear)
+
+(add-hook! org-mode :append 'org-appear-mode)
+
+(after! org
+  (setq org-hide-emphasis-markers t))
+#+end_src
+**** Transcription Mode
+#+begin_src emacs-lisp :tangle yes :results silent
+(use-package! transcription-mode)
+#+end_src
+**** TESTING LSP in src blocks
+#+begin_src emacs-lisp :tangle yes :results silent
+(cl-defmacro lsp-org-babel-enable (lang)
+  "Support LANG in org source code block."
+  (setq centaur-lsp 'lsp-mode)
+  (cl-check-type lang stringp)
+  (let* ((edit-pre (intern (format "org-babel-edit-prep:%s" lang)))
+         (intern-pre (intern (format "lsp--%s" (symbol-name edit-pre)))))
+    `(progn
+       (defun ,intern-pre (info)
+         (let ((file-name (->> info caddr (alist-get :file))))
+           (unless file-name
+             (setq file-name (make-temp-file "babel-lsp-")))
+           (setq buffer-file-name file-name)
+           (lsp-deferred)))
+       (put ',intern-pre 'function-documentation
+            (format "Enable lsp-mode in the buffer of org source block (%s)."
+                    (upcase ,lang)))
+       (if (fboundp ',edit-pre)
+           (advice-add ',edit-pre :after ',intern-pre)
+         (progn
+           (defun ,edit-pre (info)
+             (,intern-pre info))
+           (put ',edit-pre 'function-documentation
+                (format "Prepare local buffer environment for org source block (%s)."
+                        (upcase ,lang))))))))
+(defvar org-babel-lang-list
+  '("go" "python" "ipython" "bash" "sh"))
+(dolist (lang org-babel-lang-list)
+  (eval `(lsp-org-babel-enable ,lang)))
+#+end_src
+*** Logging
+#+begin_src emacs-lisp :tangle yes :results silent
+(after! org
+  (setq org-log-done t)
+  (setq org-log-into-drawer t))
+#+end_src
+*** TODO Calendar
+*** Capture
+#+begin_src emacs-lisp :tangle yes :results silent
+(use-package! doct
+  :commands (doct))
+
+(after! org-capture
+  (defun +doct-icon-declaration-to-icon (declaration)
+    "Convert :icon declaration to icon"
+    (let ((name (pop declaration))
+          (set  (intern (concat "all-the-icons-" (plist-get declaration :set))))
+          (face (intern (concat "all-the-icons-" (plist-get declaration :color))))
+          (v-adjust (or (plist-get declaration :v-adjust) 0.01)))
+      (apply set `(,name :face ,face :v-adjust ,v-adjust))))
+
+  (defun +doct-iconify-capture-templates (groups)
+    "Add declaration's :icon to each template group in GROUPS."
+    (let ((templates (doct-flatten-lists-in groups)))
+      (setq doct-templates (mapcar (lambda (template)
+                                     (when-let* ((props (nthcdr (if (= (length template) 4) 2 5) template))
+                                                 (spec (plist-get (plist-get props :doct) :icon)))
+                                       (setf (nth 1 template) (concat (+doct-icon-declaration-to-icon spec)
+                                                                      "\t"
+                                                                      (nth 1 template))))
+                                     template)
+                                   templates))))
+
+  (setq doct-after-conversion-functions '(+doct-iconify-capture-templates))
+
+  (defun set-org-capture-templates ()
+    (setq org-capture-templates
+          (doct `(("Personal todo" :keys "t"
+                   :icon ("checklist" :set "octicon" :color "green")
+                   :file +org-capture-todo-file
+                   :prepend t
+                   :headline "Inbox"
+                   :type entry
+                   :template ("* TODO %?"
+                              "%i %a")
+                   )
+                  ("Personal note" :keys "n"
+                   :icon ("sticky-note-o" :set "faicon" :color "green")
+                   :file +org-capture-todo-file
+                   :prepend t
+                   :headline "Inbox"
+                   :type entry
+                   :template ("* %?"
+                              "%i %a"))
+                  ;; ("Email" :keys "e"
+                  ;;  :icon ("envelope" :set "faicon" :color "blue")
+                  ;;  :file +org-capture-todo-file
+                  ;;  :prepend t
+                  ;;  :headline "Inbox"
+                  ;;  :type entry
+                  ;;  :template ("* TODO %^{type|reply to|contact} %\\3 %? :email:"
+                  ;;             "Send an email %^{urgancy|soon|ASAP|anon|at some point|eventually} to %^{recipiant}"
+                  ;;             "about %^{topic}"
+                  ;;             "%U %i %a"))
+                  ("Interesting" :keys "i"
+                   :icon ("eye" :set "faicon" :color "lcyan")
+                   :file +org-capture-todo-file
+                   :prepend t
+                   :headline "Interesting"
+                   :type entry
+                   :template ("* [ ] %{desc}%? :%{i-type}:"
+                              "%i %a")
+                   :children (("Webpage" :keys "w"
+                               :icon ("globe" :set "faicon" :color "green")
+                               :desc "%(org-cliplink-capture) "
+                               :i-type "read:web"
+                               )
+                              ("Article" :keys "a"
+                               :icon ("file-text" :set "octicon" :color "yellow")
+                               :desc ""
+                               :i-type "read:reaserch"
+                               )
+                              ("Information" :keys "i"
+                               :icon ("info-circle" :set "faicon" :color "blue")
+                               :desc ""
+                               :i-type "read:info"
+                               )
+                              ("Idea" :keys "I"
+                               :icon ("bubble_chart" :set "material" :color "silver")
+                               :desc ""
+                               :i-type "idea"
+                               )))
+                  ("Tasks" :keys "k"
+                   :icon ("inbox" :set "octicon" :color "yellow")
+                   :file +org-capture-todo-file
+                   :prepend t
+                   :headline "Tasks"
+                   :type entry
+                   :template ("* TODO %? %^G%{extra}"
+                              "%i %a")
+                   :children (("General Task" :keys "k"
+                               :icon ("inbox" :set "octicon" :color "yellow")
+                               :extra ""
+                               )
+                              ("Task with deadline" :keys "d"
+                               :icon ("timer" :set "material" :color "orange" :v-adjust -0.1)
+                               :extra "\nDEADLINE: %^{Deadline:}t"
+                               )
+                              ("Scheduled Task" :keys "s"
+                               :icon ("calendar" :set "octicon" :color "orange")
+                               :extra "\nSCHEDULED: %^{Start time:}t"
+                               )
+                              ))
+                  ("Stuff for Others" :keys "o"
+                   :icon ("person" :set "octicon" :color "yellow")
+                   :file +org-capture-todo-file
+                   :prepend t
+                   :headline "Stuff for others"
+                   :type entry
+                   :template ("* TODO %? %^G%{extra}"
+                              "%i %a")
+                   :children (("General Task" :keys "k"
+                               :icon ("inbox" :set "octicon" :color "yellow")
+                               :extra ""
+                               )
+                              ("Task with deadline" :keys "d"
+                               :icon ("timer" :set "material" :color "orange" :v-adjust -0.1)
+                               :extra "\nDEADLINE: %^{Deadline:}t"
+                               )
+                              ("Scheduled Task" :keys "s"
+                               :icon ("calendar" :set "octicon" :color "orange")
+                               :extra "\nSCHEDULED: %^{Start time:}t"
+                               )
+                              ))
+                  ("Project" :keys "p"
+                   :icon ("repo" :set "octicon" :color "silver")
+                   :prepend t
+                   :type entry
+                   :headline "Inbox"
+                   :template ("* %{time-or-todo} %?"
+                              "%i"
+                              "%a")
+                   :file ""
+                   :custom (:time-or-todo "")
+                   :children (("Project-local todo" :keys "t"
+                               :icon ("checklist" :set "octicon" :color "green")
+                               :time-or-todo "TODO"
+                               :file +org-capture-project-todo-file)
+                              ("Project-local note" :keys "n"
+                               :icon ("sticky-note" :set "faicon" :color "yellow")
+                               :time-or-todo "%U"
+                               :file +org-capture-project-notes-file)
+                              ("Project-local changelog" :keys "c"
+                               :icon ("list" :set "faicon" :color "blue")
+                               :time-or-todo "%U"
+                               :heading "Unreleased"
+                               :file +org-capture-project-changelog-file))
+                   )
+                  ("\tCentralised project templates"
+                   :keys "o"
+                   :type entry
+                   :prepend t
+                   :template ("* %{time-or-todo} %?"
+                              "%i"
+                              "%a")
+                   :children (("Project todo"
+                               :keys "t"
+                               :prepend nil
+                               :time-or-todo "TODO"
+                               :heading "Tasks"
+                               :file +org-capture-central-project-todo-file)
+                              ("Project note"
+                               :keys "n"
+                               :time-or-todo "%U"
+                               :heading "Notes"
+                               :file +org-capture-central-project-notes-file)
+                              ("Project changelog"
+                               :keys "c"
+                               :time-or-todo "%U"
+                               :heading "Unreleased"
+                               :file +org-capture-central-project-changelog-file))
+                   )))))
+
+  (set-org-capture-templates)
+  (unless (display-graphic-p)
+    (add-hook 'server-after-make-frame-hook
+              (defun org-capture-reinitialise-hook ()
+                (when (display-graphic-p)
+                  (set-org-capture-templates)
+                  (remove-hook 'server-after-make-frame-hook
+                               #'org-capture-reinitialise-hook))))))
+#+end_src
+*** Roam
+#+begin_src emacs-lisp :tangle yes :results silent
+(after! org-roam
+  (setq org-roam-directory "~/org/roam/"
+        org-roam-db-location "~/org/roam/.roam.db"
+        ;; don't match my private org stuff
+        org-roam-file-exclude-regexp "/org"))
+#+end_src
+
+*** DEACTIVATED Journal
+CLOSED: [2021-04-10 Sat 12:23]
+#+begin_src emacs-lisp :tangle no :results silent
 (use-package org-journal
-  :init
-  (setq org-journal-dir "~/org/daily"
+  (setq org-journal-dir "~/org/journal"
         org-journal-date-prefix "#+TITLE: "
         org-journal-file-format "%Y-%m-%d.org"
-        org-journal-date-format "%A, %d %B %Y")
-  )
-
-(setq org-journal-enable-agenda-integration t)
+        org-journal-date-format "%A, %d %B %Y"))
 #+end_src
-** TODO Agenda
-#+begin_src elisp :tangle yes
-
-;; set shortcut for agenda view
-
-#+end_src
-
-** KILL org-capture
-#+begin_src elisp :tangle no
-;; This function was found on a stackoverflow post -> https://stackoverflow.com/questions/6681407/org-mode-capture-with-sexp
-(defun get-page-title (url)
-  "Get title of web page, whose url can be found in the current line"
-  ;; Get title of web page, with the help of functions in url.el
-  (with-current-buffer (url-retrieve-synchronously url)
-    ;; find title by grep the html code
-    (goto-char 0)
-    (re-search-forward "<title>\\([^<]*\\)</title>" nil t 1)
-    (setq web_title_str (match-string 1))
-    ;; find charset by grep the html code
-    (goto-char 0)
-
-    ;; find the charset, assume utf-8 otherwise
-    (if (re-search-forward "charset=\\([-0-9a-zA-Z]*\\)" nil t 1)
-        (setq coding_charset (downcase (match-string 1)))
-      (setq coding_charset "utf-8")
-      ;; decode the string of title.
-      (setq web_title_str (decode-coding-string web_title_str (intern
-                                                               coding_charset))))
-    (concat "[[" url "][" web_title_str "]]")))
-#+end_src
-
-#+RESULTS:
-: get-page-title
-
-* TODO Tex
-** KILL Auctex
-This is just a bunch of stuff i hacked together from the internet. No idea how
-it works.
-#+begin_src elisp :tangle yes
-(setq TeX-auto-save t) ; enable parse on load
-(setq TeX-parse-self t) ; enable parse on save
+*** Export
+**** TeX
+#+begin_src emacs-lisp :tangle yes :results silent
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq org-export-with-smart-quotes t)
 (setq-default TeX-master nil)
-#+end_src
-** TODO Reftex
-this tool is for managing the bibliography. Currently do not have a bib file so
-is left in for later completion.
-#+begin_src elisp :tangle yes
-(setq reftex-default-bibliography "/home/weast/org/projects/Coding/Latex/testbill/bib.bib") ;; change the path
+
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)  ;; with AUCTeX LaTeX mode
+
+;; CV
+(use-package ox-moderncv
+  :load-path "/home/weast/org/admin/CV/org-cv"
+  :init (require 'ox-moderncv))
 #+end_src
-** KILL PDF viewer
-For previewing the PDFs that latex generates. I have the option of choosing the default order.
-setting to ~nil~ makes ~DocView~ the default.
-#+begin_src elisp :tangle no
-(setq +latex-viewers '(zathura))
+**** TODO View Exported file
+#+begin_src emacs-lisp :tangle yes :results silent
+(defun org-view-output-file (&optional org-file-path)
+  "Visit buffer open on the first output file (if any) found, using `org-view-output-file-extensions'"
+  (interactive)
+  (let* ((org-file-path (or org-file-path (buffer-file-name) ""))
+         (dir (file-name-directory org-file-path))
+         (basename (file-name-base org-file-path))
+         (output-file nil))
+    (dolist (ext org-view-output-file-extensions)
+      (unless output-file
+        (when (file-exists-p
+               (concat dir basename "." ext))
+          (setq output-file (concat dir basename "." ext)))))
+    (if output-file
+        (if (member (file-name-extension output-file) org-view-external-file-extensions)
+            (browse-url-xdg-open output-file)
+          (pop-to-buffer (or (find-buffer-visiting output-file)
+                             (find-file-noselect output-file))))
+      (message "No exported file found"))))
+
+(defvar org-view-output-file-extensions '("pdf" "md" "rst" "txt" "tex" "html")
+  "Search for output files with these extensions, in order, viewing the first that matches")
+(defvar org-view-external-file-extensions '("html")
+  "File formats that should be opened externally.")
+#+end_src
+*** DEACTIVATED Citations
+CLOSED: [2021-04-10 Sat 12:30]
+#+begin_src emacs-lisp :tangle no :results silent
+(use-package! org-ref
+  :after org
+  :config
+  (setq org-ref-completion-library 'org-ref-ivy-cite))
 #+end_src
 
-* Transcription Capabilities
-I do a lot of transcription, and using this [[file:packages.el::(package! transcription-mode][repo]] can control VLC from Emacs.
-useful for not having to leave the document to scrub the audio (video) files.
-#+begin_src elisp :tangle yes
-(use-package! transcription-mode)
+** Yasnippet
+#+begin_src emacs-lisp :tangle yes :results silent
+(setq yas-triggers-in-field t)
+#+end_src
+
+* Keybindings
+** Global
+#+begin_src emacs-lisp :tangle yes :results silent
+(map!
+ ("M-q" #'kill-current-buffer)
+ ("M-w" #'save-buffer)
+ :leader
+ (:prefix-map ("d" . "dictionary")
+  :desc "Change to german" "g" #'my/switch-to-de-dict
+  :desc "Change to english" "e" #'my/switch-to-en-dict)
+ ;; (:prefix ("f" . "file")
+ ;;  :desc "Open neotree" "t" #'+neotree/open)
+ )
+#+end_src
+** TESTING org-mode
+#+begin_src emacs-lisp :tangle yes :results silent
+(map!
+ :map org-mode-map
+ (:leader
+  (:prefix ("t" . "toggle/tangle")
+   :desc "Tangle src blocks" "t" #'org-babel-tangle
+   :desc "Jump to src block" "j" #'org-babel-tangle-jump
+   :desc "Detangle" "d" #'org-babel-detangle )
+  (:prefix ("m" . "view")
+   :desc "View exported file" "v" #'org-view-output-file )
+  (:prefix ("a" . "archive")
+   :desc "Archive tree" "a" )))
 #+end_src

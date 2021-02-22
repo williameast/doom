@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: wpa_supplicant 
+# uuid: 
+# key: trigger-key
+# condition: t
+# --
+country=DE
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+
+network={
+    ssid="SSID HERE"
+    psk="PSK HERE"
+}

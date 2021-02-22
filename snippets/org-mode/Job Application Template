@@ -1,0 +1,24 @@
+# -*- mode: snippet -*-
+# name: Job Application Template 
+# key: jobapptemp
+# --
+
+#+title:     $1 Application
+#+author:    William East
+#+email:     williameast@live.com
+
+* Checklist
+** [ ] Org application populated
+** [ ] Updated CV in the correct language
+** [ ] Cover Letter completed
+** [ ] Additional Documents provided
+** [ ] References established
+* Application timeline
+** Application Begun
+** Submission
+* Contact(s)
+* Cover letter
+** Job Description
+* References
+* Agenda Refile
+** Application Deadline for <INSERT COMPANY NAME HERE>

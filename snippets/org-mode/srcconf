@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: srcconf
+# uuid: srcconf
+# key: <conf 
+# --
+#+begin_src emacs-lisp :tangle yes :results silent $1
+`%`$0
+#+end_src

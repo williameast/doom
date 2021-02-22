@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
 # name:src python simple 
-# key: srcpy
+# key: <py
 # --
 
-#+begin_src python $1
+#+begin_src python :results output $1
 `%`$0
 #+end_src

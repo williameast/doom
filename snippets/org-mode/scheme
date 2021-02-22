@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: scheme
+# uuid: scm
+# key: <scm 
+# condition: t
+# --
+#+begin_src scheme :tangle "../code/scheme/$1.scm" :comments yes :noweb yes :results silent
+$0
+#+end_src
