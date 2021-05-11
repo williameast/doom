@@ -108,7 +108,7 @@ We expect the encoding to be LF UTF-8, so only show the modeline when this is no
   (ispell-change-dictionary "en_GB")
   (flyspell-buffer))
 #+end_src
-* TODO Email [0/1]
+* TODO Email
 ** TESTING General
 #+begin_src emacs-lisp :tangle yes :results silent
 (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
