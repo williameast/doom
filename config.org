@@ -4,39 +4,8 @@
 #+OPTIONS: toc:nil h:5
 #+TITLE: Literate Doom Emacs configuration
 #+TODO: TODO TESTING | DEACTIVATED BROKEN
-* General
-** Name of User
-#+begin_src emacs-lisp :tangle yes :results silent
-=======
-
-* Overview
-This is my Org file for creating the config.el for Doom Emacs. no need to run
-Doom Sync after modifying. This config is literate, so needs to be run in
-conjunction with [[file:~/.emacs.d/modules/config/literate/README.org::+TITLE: config/literate][Literate]] to work.
-
-TODO indicates work still needs to be done or functionality is not fully
-understood.
-
-KILL indicates that a given aspect is not implemented because it is not needed,
-or doesn't apply to the specific application.
-** Useful Links
-[[https://tecosaur.github.io/emacs-config/config.html#windows,code--1][Techosaur's Literate Config]] provides a good orientation of what each module is
-meant to do. It is highly descriptive which is really useful for learning the
-basics
-[[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org][Lissners guide to Doom Emacs]] gives a good overview of basic functionality.
-
-** The Wishlist!
-*** [[https://github.com/alphapapa/burly.el][burly.el]]
-This package provides tools to save and restore frame and window configurations
-in Emacs, including buffers that may not be live anymore. In this way, it’s like
-a lightweight “workspace” manager, allowing you to easily restore one or more
-frames, including their windows, the windows’ layout, and their buffers.
-
-
-
 * Background personal information
 #+begin_src elisp :tangle yes
->>>>>>> origin/master
 (setq user-full-name "William East"
       user-mail-address "williameast@live.com")
 #+end_src
@@ -58,20 +27,6 @@ frames, including their windows, the windows’ layout, and their buffers.
 ** Fonts
 #+begin_src emacs-lisp :tangle yes :results silent
 (setq doom-font (font-spec :family "monospace" :size 14))
-#+end_src
-** DEACTIVATED Transparency
-CLOSED: [2021-04-10 Sat 12:23]
-#+begin_src emacs-lisp :tangle no :results silent
-(defun my/toggle-transparency ()
-  (interactive)
-  (let ((alpha (frame-parameter nil 'alpha)))
-    (if (eq
-         (if (numberp alpha)
-             alpha
-           (cdr alpha)) ; may also be nil
-         100)
-        (set-frame-parameter nil 'alpha '(93 . 93))
-      (set-frame-parameter nil 'alpha '(100 . 100)))))
 #+end_src
 ** Theme
 #+begin_src emacs-lisp :tangle yes :results silent
@@ -232,7 +187,7 @@ We expect the encoding to be LF UTF-8, so only show the modeline when this is no
 (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a.")))
 #+end_src
 *** TESTING Agenda
-#+begin_src emacs-lisp :tangle no :results silent
+#+begin_src emacs-lisp :tangle yes :results silent
 (after! org
   (use-package! org-super-agenda
     :after org-agenda

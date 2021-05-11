@@ -128,6 +128,43 @@
       org-catch-invisible-edits 'smart)
 (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a.")))
 
+(after! org
+  (use-package! org-super-agenda
+    :after org-agenda
+    :init
+    (setq org-habit-show-done-always-green 't
+          org-agenda-prefix-format
+          '((agenda . " %?-12t% s")
+            (todo . " %i %-12:c")
+            (tags . " %i %-12:c")
+            (search . " %i %-12:c")))
+    (setq org-agenda-window-setup 'current-window)
+    (setq org-agenda-start-day "+0d")
+    (setq org-agenda-span 'day)
+    (setq org-agenda-skip-scheduled-if-done t)
+    (setq org-agenda-skip-deadline-if-done t)
+    (setq org-agenda-start-on-weekday nil)
+    (setq org-agenda-dim-blocked-tasks nil) ;; makes main tasks visible in agenda-view
+    (setq org-agenda-files "~/org/todo.org")
+    (setq org-super-agenda-groups
+          '((:name "Due today"
+             :deadline today)
+            (:name "Overdue"
+             :deadline past)
+            (:name "Due soon"
+             :deadline future)
+            (:name "Habits"
+             :habit t)
+            (:name "Start today"
+             :scheduled today)
+            (:name "Start soon"
+             :scheduled future)
+            (:name "Reschedule or review"
+             :scheduled past)
+            ))
+    :config
+    (org-super-agenda-mode)))
+
 (use-package! org-appear)
 
 (add-hook! org-mode :append 'org-appear-mode)
