@@ -1,5 +1,4 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
-<<<<<<< HEAD
 #+STARTUP: overview
 #+OPTIONS: toc:nil h:5
 #+TITLE: Literate Doom Emacs configuration
@@ -534,6 +533,27 @@ CLOSED: [2021-04-10 Sat 12:30]
 #+begin_src emacs-lisp :tangle yes :results silent
 (setq yas-triggers-in-field t)
 #+end_src
+** TESTING Edit with Emacs
+#+begin_src emacs-lisp :tangle no :results silent
+(use-package! edit-server
+  :ensure t
+  :commands edit-server-start
+  :init (if after-init-time
+              (edit-server-start)
+            (add-hook 'after-init-hook
+                      #'(lambda() (edit-server-start))))
+  :config (setq edit-server-new-frame-alist
+                '((name . "Edit with Emacs FRAME")
+                  (top . 200)
+                  (left . 200)
+                  (width . 80)
+                  (height . 25)
+                  (minibuffer . t)
+                  (menu-bar-lines . t)
+                  (window-system . x))))
+
+#+end_src
+
 
 * Keybindings
 ** Global
