@@ -145,7 +145,6 @@
     (setq org-agenda-skip-deadline-if-done t)
     (setq org-agenda-start-on-weekday nil)
     (setq org-agenda-dim-blocked-tasks nil) ;; makes main tasks visible in agenda-view
-    (setq org-agenda-files "~/org/todo.org")
     (setq org-super-agenda-groups
           '((:name "Due today"
              :deadline today)
