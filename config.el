@@ -5,7 +5,7 @@
                                        "~/org/projects"))
 
 (setq org-directory "~/org/"
-      org-agenda-files "home/weast/org/todo.org")
+      org-agenda-files "~/org/todo.org")
 
 (setq reftex-default-bibliography "/home/weast/org/projects/Coding/Latex/testbill/bib.bib") ;; change the path
 
