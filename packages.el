@@ -57,9 +57,18 @@
   :recipe (:host github
            :repo "awth13/org-appear"))
 
+<<<<<<< HEAD
 (package! ox-moderncv
   :recipe (:host gitlab
            :repo "Titan-C/org-cv"))
 
 (package! org-super-agenda)
 (package! carbon-now-sh)
+=======
+;; (package! ox-moderncv
+;;   :recipe (:host gitlab
+;;            :repo "Titan-C/org-cv"))
+
+(package! org-super-agenda)
+;; (package! carbon-now-sh)
+>>>>>>> 7dfb6f9 (added transparency toggle)
