@@ -1,5 +1,4 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
-<<<<<<< HEAD
 #+STARTUP: folded
 #+OPTIONS: toc:nil h:5
 #+TITLE: Literate Doom Emacs configuration
