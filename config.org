@@ -1,9 +1,6 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 <<<<<<< HEAD
-#+STARTUP: overview
-=======
 #+STARTUP: folded
->>>>>>> 7dfb6f9 (added transparency toggle)
 #+OPTIONS: toc:nil h:5
 #+TITLE: Literate Doom Emacs configuration
 #+TODO: TODO TESTING | DEACTIVATED BROKEN
@@ -33,11 +30,7 @@
 #+end_src
 ** Theme
 #+begin_src emacs-lisp :tangle yes :results silent
-<<<<<<< HEAD
-(setq doom-theme 'doom-one
-=======
 (setq doom-theme 'doom-dracula
->>>>>>> 7dfb6f9 (added transparency toggle)
       doom-themes-enable-bold t)
 #+end_src
 ** Modeline
@@ -98,8 +91,6 @@ We expect the encoding to be LF UTF-8, so only show the modeline when this is no
 (after! company-box
   (setq company-box-max-candidates 10))
 #+end_src
-<<<<<<< HEAD
-=======
 ** Transparency
 function to add transparent window.
 #+begin_src emacs-lisp :tangle yes :results silent
@@ -116,7 +107,6 @@ function to add transparent window.
       (set-frame-parameter nil 'alpha '(100 . 100)))))
 (toggle-transparency)
 #+end_src
->>>>>>> 7dfb6f9 (added transparency toggle)
 * Dictionaries and Language
 ** Default Dictionary
 #+begin_src emacs-lisp :tangle yes :results silent
@@ -179,10 +169,7 @@ function to add transparent window.
 #+end_src
 * Programming
 ** Python
-<<<<<<< HEAD
 ** Literate Programming
-
-=======
 #+begin_src emacs-lisp :tangle yes :results silent
 (after! org
   (setq org-src-window-setup 'current-window
@@ -190,7 +177,6 @@ function to add transparent window.
 #+end_src
 
 ** Literate Programming
->>>>>>> 7dfb6f9 (added transparency toggle)
 #+begin_src emacs-lisp :tangle yes :results silent
 (after! org
   (defun org-babel-tangle-jump ()
@@ -219,10 +205,7 @@ function to add transparent window.
 (setq org-use-property-inheritance t
       org-list-allow-alphabetical t
       org-export-in-background t
-<<<<<<< HEAD
-=======
       org-indent-mode t
->>>>>>> 7dfb6f9 (added transparency toggle)
       org-catch-invisible-edits 'smart)
 (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a.")))
 #+end_src
@@ -278,11 +261,7 @@ function to add transparent window.
 #+begin_src emacs-lisp :tangle yes :results silent
 (use-package! transcription-mode)
 #+end_src
-<<<<<<< HEAD
-**** TESTING LSP in src blocks
-=======
 **** LSP in src blocks
->>>>>>> 7dfb6f9 (added transparency toggle)
 #+begin_src emacs-lisp :tangle yes :results silent
 (cl-defmacro lsp-org-babel-enable (lang)
   "Support LANG in org source code block."
@@ -506,11 +485,7 @@ function to add transparent window.
                                #'org-capture-reinitialise-hook))))))
 #+end_src
 *** Roam
-<<<<<<< HEAD
-#+begin_src emacs-lisp :tangle yes :results silent
-=======
 #+begin_src emacs-lisp :tangle no :results silent
->>>>>>> 7dfb6f9 (added transparency toggle)
 (after! org-roam
   (setq org-roam-directory "~/org/roam/"
         org-roam-db-location "~/org/roam/.roam.db"
@@ -536,14 +511,6 @@ CLOSED: [2021-04-10 Sat 12:23]
 (setq-default TeX-master nil)
 
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)  ;; with AUCTeX LaTeX mode
-<<<<<<< HEAD
-
-;; CV
-(use-package ox-moderncv
-  :load-path "/home/weast/org/admin/CV/org-cv"
-  :init (require 'ox-moderncv))
-=======
->>>>>>> 7dfb6f9 (added transparency toggle)
 #+end_src
 **** TODO View Exported file
 #+begin_src emacs-lisp :tangle yes :results silent
@@ -579,9 +546,7 @@ CLOSED: [2021-04-10 Sat 12:30]
   :config
   (setq org-ref-completion-library 'org-ref-ivy-cite))
 #+end_src
-<<<<<<< HEAD
 
-=======
 *** PDF-tools
 #+begin_src emacs-lisp :tangle yes :results silent
 (use-package pdf-view
@@ -597,12 +562,10 @@ CLOSED: [2021-04-10 Sat 12:30]
 #+begin_src emacs-lisp :tangle yes :results silent
 (setq +treemacs-git-mode 'deferred)
 #+end_src
->>>>>>> 7dfb6f9 (added transparency toggle)
 ** Yasnippet
 #+begin_src emacs-lisp :tangle yes :results silent
 (setq yas-triggers-in-field t)
 #+end_src
-<<<<<<< HEAD
 ** TESTING Edit with Emacs
 #+begin_src emacs-lisp :tangle no :results silent
 (use-package! edit-server
@@ -625,7 +588,6 @@ CLOSED: [2021-04-10 Sat 12:30]
 #+end_src
 
 
-=======
 ** Company
 make company a little cleverer. increase history to give company a bigger range
 of words to work with.
@@ -643,7 +605,6 @@ of words to work with.
 (setq-default prescient-history-length 1000)
 #+end_src
 
->>>>>>> 7dfb6f9 (added transparency toggle)
 * Keybindings
 ** Global
 #+begin_src emacs-lisp :tangle yes :results silent
@@ -669,10 +630,6 @@ of words to work with.
    :desc "Detangle" "d" #'org-babel-detangle )
   (:prefix ("m" . "view")
    :desc "View exported file" "v" #'org-view-output-file )
-<<<<<<< HEAD
   (:prefix ("a" . "archive")
    :desc "Archive tree" "a" )))
-=======
-  ))
->>>>>>> 7dfb6f9 (added transparency toggle)
 #+end_src

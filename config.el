@@ -13,11 +13,7 @@
 
 (setq doom-font (font-spec :family "monospace" :size 14))
 
-<<<<<<< HEAD
-(setq doom-theme 'doom-one
-=======
 (setq doom-theme 'doom-dracula
->>>>>>> 7dfb6f9 (added transparency toggle)
       doom-themes-enable-bold t)
 
 (unless (equal "Battery Status not available"
@@ -56,8 +52,6 @@
 (after! company-box
   (setq company-box-max-candidates 10))
 
-<<<<<<< HEAD
-=======
 (defun toggle-transparency ()
   "Toggle the background to be transparent or not."
   (interactive)
@@ -71,7 +65,6 @@
       (set-frame-parameter nil 'alpha '(100 . 100)))))
 (toggle-transparency)
 
->>>>>>> 7dfb6f9 (added transparency toggle)
 (setq ispell-dictionary "en_GB")
 
 (defun my/switch-to-de-dict ()
@@ -125,13 +118,10 @@
 (add-hook 'mu4e-compose-mode-hook (lambda () (use-hard-newlines -1)))
 
 (after! org
-<<<<<<< HEAD
-=======
   (setq org-src-window-setup 'current-window
         org-babel-python-command "python3"))
 
 (after! org
->>>>>>> 7dfb6f9 (added transparency toggle)
   (defun org-babel-tangle-jump ()
     "Jump to tangle file for the source block at point."
     (interactive)
@@ -152,10 +142,7 @@
 (setq org-use-property-inheritance t
       org-list-allow-alphabetical t
       org-export-in-background t
-<<<<<<< HEAD
-=======
       org-indent-mode t
->>>>>>> 7dfb6f9 (added transparency toggle)
       org-catch-invisible-edits 'smart)
 (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a.")))
 
@@ -420,15 +407,6 @@
                   (remove-hook 'server-after-make-frame-hook
                                #'org-capture-reinitialise-hook))))))
 
-<<<<<<< HEAD
-(after! org-roam
-  (setq org-roam-directory "~/org/roam/"
-        org-roam-db-location "~/org/roam/.roam.db"
-        ;; don't match my private org stuff
-        org-roam-file-exclude-regexp "/org"))
-
-=======
->>>>>>> 7dfb6f9 (added transparency toggle)
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq org-export-with-smart-quotes t)
@@ -436,14 +414,6 @@
 
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)  ;; with AUCTeX LaTeX mode
 
-<<<<<<< HEAD
-;; CV
-(use-package ox-moderncv
-  :load-path "/home/weast/org/admin/CV/org-cv"
-  :init (require 'ox-moderncv))
-
-=======
->>>>>>> 7dfb6f9 (added transparency toggle)
 (defun org-view-output-file (&optional org-file-path)
   "Visit buffer open on the first output file (if any) found, using `org-view-output-file-extensions'"
   (interactive)
@@ -468,10 +438,6 @@
 (defvar org-view-external-file-extensions '("html")
   "File formats that should be opened externally.")
 
-<<<<<<< HEAD
-(setq yas-triggers-in-field t)
-
-=======
 (use-package pdf-view
   :hook (pdf-tools-enabled . pdf-view-themed-minor-mode))
 
@@ -494,7 +460,6 @@
 (setq-default history-length 1000)
 (setq-default prescient-history-length 1000)
 
->>>>>>> 7dfb6f9 (added transparency toggle)
 (map!
  ("M-q" #'kill-current-buffer)
  ("M-w" #'save-buffer)
@@ -515,9 +480,5 @@
    :desc "Detangle" "d" #'org-babel-detangle )
   (:prefix ("m" . "view")
    :desc "View exported file" "v" #'org-view-output-file )
-<<<<<<< HEAD
   (:prefix ("a" . "archive")
    :desc "Archive tree" "a" )))
-=======
-  ))
->>>>>>> 7dfb6f9 (added transparency toggle)
