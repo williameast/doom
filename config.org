@@ -92,7 +92,7 @@ We expect the encoding to be LF UTF-8, so only show the modeline when this is no
 #+end_src
 ** Transparency
 function to add transparent window.
-#+begin_src emacs-lisp :tangle yes :results silent
+#+begin_src emacs-lisp :tangle no :results silent
 (defun toggle-transparency ()
   "Toggle the background to be transparent or not."
   (interactive)
@@ -585,7 +585,6 @@ CLOSED: [2021-04-10 Sat 12:30]
                   (window-system . x))))
 
 #+end_src
-
 
 ** Company
 make company a little cleverer. increase history to give company a bigger range

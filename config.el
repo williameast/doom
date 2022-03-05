@@ -52,19 +52,6 @@
 (after! company-box
   (setq company-box-max-candidates 10))
 
-(defun toggle-transparency ()
-  "Toggle the background to be transparent or not."
-  (interactive)
-  (let ((alpha (frame-parameter nil 'alpha)))
-    (if (eq
-         (if (numberp alpha)
-             alpha
-           (cdr alpha)) ; may also be nil
-         100)
-        (set-frame-parameter nil 'alpha '(93 . 93))
-      (set-frame-parameter nil 'alpha '(100 . 100)))))
-(toggle-transparency)
-
 (setq ispell-dictionary "en_GB")
 
 (defun my/switch-to-de-dict ()
