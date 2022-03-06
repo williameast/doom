@@ -4,10 +4,36 @@
 (setq projectile-project-search-path '("/home/weast"
                                        "~/org/projects"))
 
-(setq org-directory "~/org/"
-      org-agenda-files "~/org/todo.org")
+(setq org-directory "~/org/")
 
-(setq reftex-default-bibliography "/home/weast/org/projects/Coding/Latex/testbill/bib.bib") ;; change the path
+;; If you ever need it, this is how you set your reftex bib for bibliography management.
+;; (setq reftex-default-bibliography "/home/weast/org/projects/Coding/Latex/testbill/bib.bib") ;; change the path
+
+;; https://stackoverflow.com/questions/11384516/how-to-make-all-org-files-under-a-folder-added-in-agenda-list-automatically
+
+(defun sa-find-org-file-recursively (&optional directory filext)
+  "Return .org and .org_archive files recursively from DIRECTORY.
+If FILEXT is provided, return files with extension FILEXT instead."
+  (interactive "DDirectory: ")
+  (let* (org-file-list
+     (case-fold-search t)         ; filesystems are case sensitive
+     (file-name-regex "^[^.#].*") ; exclude dot, autosave, and backup files
+     (filext (or filext "org$\\\|org_archive"))
+     (fileregex (format "%s\\.\\(%s$\\)" file-name-regex filext))
+     (cur-dir-list (directory-files directory t file-name-regex)))
+    ;; loop over directory listing
+    (dolist (file-or-dir cur-dir-list org-file-list) ; returns org-file-list
+      (cond
+       ((file-regular-p file-or-dir) ; regular files
+    (if (string-match fileregex file-or-dir) ; org files
+        (add-to-list 'org-file-list file-or-dir)))
+       ((file-directory-p file-or-dir)
+    (dolist (org-file (sa-find-org-file-recursively file-or-dir filext)
+              org-file-list) ; add files found to result
+      (add-to-list 'org-file-list org-file)))))))
+
+(setq org-agenda-files
+      (append (sa-find-org-file-recursively "~/org")))
 
 (setq auto-save-default t)
 
