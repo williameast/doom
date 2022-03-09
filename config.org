@@ -18,9 +18,8 @@
 ;; If you ever need it, this is how you set your reftex bib for bibliography management.
 ;; (setq reftex-default-bibliography "/home/weast/org/projects/Coding/Latex/testbill/bib.bib") ;; change the path
 #+end_src
-** TESTING add org files to agenda recursively
+** add org files to agenda recursively
 #+begin_src emacs-lisp :tangle yes :results silent
-;; https://stackoverflow.com/questions/11384516/how-to-make-all-org-files-under-a-folder-added-in-agenda-list-automatically
 
 (defun sa-find-org-file-recursively (&optional directory filext)
   "Return .org and .org_archive files recursively from DIRECTORY.
@@ -54,7 +53,11 @@ If FILEXT is provided, return files with extension FILEXT instead."
 * User Interface
 ** Fonts
 #+begin_src emacs-lisp :tangle yes :results silent
-(setq doom-font (font-spec :family "monospace" :size 14))
+;; (setq doom-font (font-spec :family "monospace" :size 14))
+
+(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 15)
+doom-variable-pitch-font (font-spec :family "Rubik") ; inherits `doom-font''s :size
+doom-unicode-font (font-spec :family "JetBrains Mono NF Regular" :size 12))
 #+end_src
 ** Theme
 #+begin_src emacs-lisp :tangle yes :results silent
@@ -116,6 +119,18 @@ We expect the encoding to be LF UTF-8, so only show the modeline when this is no
 #+end_src
 ** Completion
 #+begin_src emacs-lisp :tangle yes :results silent
+(after! company
+  (setq +lsp-company-backends '(company-tabnine :separate company-capf company-yasnippet))
+  (setq company-show-numbers t
+        company-idle-delay 0.5
+        company-minimum-prefix-length 2
+        company-show-quick-access t
+        company-quick-access-modifier 'super))
+
+
+(setq-default history-length 1000)
+(setq-default prescient-history-length 1000)
+
 (after! company-box
   (setq company-box-max-candidates 10))
 #+end_src
@@ -153,8 +168,9 @@ function to add transparent window.
   (flyspell-buffer))
 #+end_src
 * TODO Email
-** TESTING General
-#+begin_src emacs-lisp :tangle yes :results silent
+** DEACTIVATED General
+CLOSED: [2022-03-09 Wed 13:07]
+#+begin_src emacs-lisp :tangle no :results silent
 (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
 
 (after! mu4e
@@ -200,13 +216,6 @@ function to add transparent window.
 ** Literate Programming
 #+begin_src emacs-lisp :tangle yes :results silent
 (after! org
-  (setq org-src-window-setup 'current-window
-        org-babel-python-command "python3"))
-#+end_src
-
-** Literate Programming
-#+begin_src emacs-lisp :tangle yes :results silent
-(after! org
   (defun org-babel-tangle-jump ()
     "Jump to tangle file for the source block at point."
     (interactive)
@@ -220,6 +229,10 @@ function to add transparent window.
         (if (file-readable-p file)
             (find-file file)
           (error "Cannot open tangle file %S" file))))))
+
+(after! org
+  (setq org-src-window-setup 'current-window
+        org-babel-python-command "python3"))
 #+end_src
 ** Scheme
 #+begin_src emacs-lisp :tangle yes :results silent
@@ -227,7 +240,7 @@ function to add transparent window.
     (setq geiser-active-implementations '(mit)))
 #+end_src
 * Modules
-** TODO Org [2/5]
+** Org [2/3]
 *** General
 #+begin_src emacs-lisp :tangle yes :results silent
 (setq org-use-property-inheritance t
@@ -237,7 +250,7 @@ function to add transparent window.
       org-catch-invisible-edits 'smart)
 (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a.")))
 #+end_src
-*** TESTING Agenda
+*** Agenda
 #+begin_src emacs-lisp :tangle yes :results silent
 (after! org
   (use-package! org-super-agenda
@@ -275,7 +288,7 @@ function to add transparent window.
     :config
     (org-super-agenda-mode)))
 #+end_src
-*** TODO Helper Functions
+*** Helper Functions
 **** Emphasis Management
 #+begin_src emacs-lisp :tangle yes :results silent
 (use-package! org-appear)
@@ -586,7 +599,7 @@ CLOSED: [2021-04-10 Sat 12:30]
 (require 'latex-preview-pane)
 (latex-preview-pane-enable)
 #+end_src
-** TESTING Treemacs
+** Treemacs
 #+begin_src emacs-lisp :tangle yes :results silent
 (setq +treemacs-git-mode 'deferred)
 #+end_src
@@ -594,7 +607,8 @@ CLOSED: [2021-04-10 Sat 12:30]
 #+begin_src emacs-lisp :tangle yes :results silent
 (setq yas-triggers-in-field t)
 #+end_src
-** TESTING Edit with Emacs
+** DEACTIVATED Edit with Emacs
+CLOSED: [2022-03-09 Wed 13:03]
 #+begin_src emacs-lisp :tangle no :results silent
 (use-package! edit-server
   :ensure t
@@ -615,23 +629,6 @@ CLOSED: [2021-04-10 Sat 12:30]
 
 #+end_src
 
-** Company
-make company a little cleverer. increase history to give company a bigger range
-of words to work with.
-#+begin_src emacs-lisp :tangle yes :results silent
-(after! company
-  (setq +lsp-company-backends '(company-tabnine :separate company-capf company-yasnippet))
-  (setq company-show-numbers t
-        company-idle-delay 0
-        company-minimum-prefix-length 2
-        company-show-quick-access t
-        company-quick-access-modifier 'super))
-
-
-(setq-default history-length 1000)
-(setq-default prescient-history-length 1000)
-#+end_src
-
 * Keybindings
 ** Global
 #+begin_src emacs-lisp :tangle yes :results silent
@@ -646,7 +643,7 @@ of words to work with.
  ;;  :desc "Open neotree" "t" #'+neotree/open)
  )
 #+end_src
-** TESTING org-mode
+** org-mode
 #+begin_src emacs-lisp :tangle yes :results silent
 (map!
  :map org-mode-map

@@ -9,8 +9,6 @@
 ;; If you ever need it, this is how you set your reftex bib for bibliography management.
 ;; (setq reftex-default-bibliography "/home/weast/org/projects/Coding/Latex/testbill/bib.bib") ;; change the path
 
-;; https://stackoverflow.com/questions/11384516/how-to-make-all-org-files-under-a-folder-added-in-agenda-list-automatically
-
 (defun sa-find-org-file-recursively (&optional directory filext)
   "Return .org and .org_archive files recursively from DIRECTORY.
 If FILEXT is provided, return files with extension FILEXT instead."
@@ -37,7 +35,11 @@ If FILEXT is provided, return files with extension FILEXT instead."
 
 (setq auto-save-default t)
 
-(setq doom-font (font-spec :family "monospace" :size 14))
+;; (setq doom-font (font-spec :family "monospace" :size 14))
+
+(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 15)
+doom-variable-pitch-font (font-spec :family "Rubik") ; inherits `doom-font''s :size
+doom-unicode-font (font-spec :family "JetBrains Mono NF Regular" :size 12))
 
 (setq doom-theme 'doom-dracula
       doom-themes-enable-bold t)
@@ -75,6 +77,18 @@ If FILEXT is provided, return files with extension FILEXT instead."
 
 (add-hook! 'text-mode-hook 'auto-fill-mode)
 
+(after! company
+  (setq +lsp-company-backends '(company-tabnine :separate company-capf company-yasnippet))
+  (setq company-show-numbers t
+        company-idle-delay 0.5
+        company-minimum-prefix-length 2
+        company-show-quick-access t
+        company-quick-access-modifier 'super))
+
+
+(setq-default history-length 1000)
+(setq-default prescient-history-length 1000)
+
 (after! company-box
   (setq company-box-max-candidates 10))
 
@@ -90,50 +104,6 @@ If FILEXT is provided, return files with extension FILEXT instead."
   (ispell-change-dictionary "en_GB")
   (flyspell-buffer))
 
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
-
-(after! mu4e
-  (setq mu4e-compose-complete-addresses 't
-        mu4e-use-fancy-chars 'nil
-        mu4e-sent-messages-behavior 'sent
-        mu4e-compose-format-flowed 't
-        mu4e-update-interval 300
-        mu4e-attachment-dir "~/Downloads/"
-        mu4e-view-html-plaintext-ratio-heuristic 10000
-        smtpmail-debug-info 't
-        mml-secure-openpgp-encrypt-to-self 't)
-
-  (set-email-account! "Live"
-                      '((user-mail-address              . "williameast@live.com")
-                        (user-full-name                 . "William East")
-                        (mu4e-sent-folder               . "/Live/Sent")
-                        (mu4e-drafts-folder             . "/Live/Drafts")
-                        (mu4e-trash-folder              . "/Live/Deleted")
-                        (mu4e-refile-folder             . "/Live/Archive")
-                        (smtpmail-smtp-user             . "williameast@live.com")
-                        (smtpmail-smtp-server           . "smtp-mail.outlook.com")
-                        (smtpmail-stream-type           . ssl)
-                        (smtpmail-smtp-service          . 587))
-                      t)
-  (set-email-account! "McGill"
-                      '((user-mail-address              . "william.east@mail.mcgill.ca")
-                        (user-full-name                 . "William East")
-                        (mu4e-sent-folder               . "/McGill/Sent")
-                        (mu4e-drafts-folder             . "/McGill/Drafts")
-                        (mu4e-trash-folder              . "/McGill/Trash")
-                        (mu4e-refile-folder             . "/McGill/Archive")
-                        (smtpmail-smtp-user             . "williameast@live.com")
-                        (smtpmail-smtp-server           . "outlook.office365.com")
-                        (smtpmail-stream-type           . ssl)
-                        (smtpmail-smtp-service          . 587))
-                      t))
-
-(add-hook 'mu4e-compose-mode-hook (lambda () (use-hard-newlines -1)))
-
-(after! org
-  (setq org-src-window-setup 'current-window
-        org-babel-python-command "python3"))
-
 (after! org
   (defun org-babel-tangle-jump ()
     "Jump to tangle file for the source block at point."
@@ -148,6 +118,10 @@ If FILEXT is provided, return files with extension FILEXT instead."
         (if (file-readable-p file)
             (find-file file)
           (error "Cannot open tangle file %S" file))))))
+
+(after! org
+  (setq org-src-window-setup 'current-window
+        org-babel-python-command "python3"))
 
 (after! geiser-mode
     (setq geiser-active-implementations '(mit)))
@@ -460,18 +434,6 @@ If FILEXT is provided, return files with extension FILEXT instead."
 (setq +treemacs-git-mode 'deferred)
 
 (setq yas-triggers-in-field t)
-
-(after! company
-  (setq +lsp-company-backends '(company-tabnine :separate company-capf company-yasnippet))
-  (setq company-show-numbers t
-        company-idle-delay 0
-        company-minimum-prefix-length 2
-        company-show-quick-access t
-        company-quick-access-modifier 'super))
-
-
-(setq-default history-length 1000)
-(setq-default prescient-history-length 1000)
 
 (map!
  ("M-q" #'kill-current-buffer)

@@ -58,3 +58,12 @@
            :repo "awth13/org-appear"))
 
 (package! org-super-agenda)
+
+
+;; add tabnine completion
+
+(package! company-tabnine
+  :pin "98e9e8b38b6ca289fbe265b0a7b62c7fe38ed0e2"
+  :recipe (:host github
+           :repo "TommyX12/company-tabnine"
+           :branch "master"))
