@@ -35,11 +35,8 @@ If FILEXT is provided, return files with extension FILEXT instead."
 
 (setq auto-save-default t)
 
-;; (setq doom-font (font-spec :family "monospace" :size 14))
-
-(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 15)
-doom-variable-pitch-font (font-spec :family "Rubik") ; inherits `doom-font''s :size
-doom-unicode-font (font-spec :family "JetBrains Mono NF Regular" :size 12))
+(setq doom-font (font-spec :family "JetBrainsMono" :size 14)
+doom-unicode-font (font-spec :family "monospace" :size 12))
 
 (setq doom-theme 'doom-dracula
       doom-themes-enable-bold t)
