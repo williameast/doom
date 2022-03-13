@@ -641,6 +641,7 @@ CLOSED: [2022-03-09 Wed 13:03]
  )
 #+end_src
 ** org-mode
+
 #+begin_src emacs-lisp :tangle yes :results silent
 (map!
  :map org-mode-map
