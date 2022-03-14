@@ -38,6 +38,13 @@ If FILEXT is provided, return files with extension FILEXT instead."
 (setq doom-font (font-spec :family "JetBrainsMono" :size 14)
 doom-unicode-font (font-spec :family "monospace" :size 12))
 
+
+(defvar doom-modeline-icon (display-graphic-p)
+  "Whether show `all-the-icons' or not.
+
+Non-nil to show the icons in mode-line.
+The icons may not be showed correctly in terminal and on Windows.")
+
 (setq doom-theme 'doom-dracula
       doom-themes-enable-bold t)
 
@@ -74,10 +81,12 @@ doom-unicode-font (font-spec :family "monospace" :size 12))
 
 (add-hook! 'text-mode-hook 'auto-fill-mode)
 
+(require 'company-tabnine)
+
 (after! company
   (setq +lsp-company-backends '(company-tabnine :separate company-capf company-yasnippet))
   (setq company-show-numbers t
-        company-idle-delay 0.5
+        company-idle-delay 0
         company-minimum-prefix-length 2
         company-show-quick-access t
         company-quick-access-modifier 'super))

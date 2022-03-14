@@ -55,6 +55,13 @@ If FILEXT is provided, return files with extension FILEXT instead."
 #+begin_src emacs-lisp :tangle yes :results silent
 (setq doom-font (font-spec :family "JetBrainsMono" :size 14)
 doom-unicode-font (font-spec :family "monospace" :size 12))
+
+
+(defvar doom-modeline-icon (display-graphic-p)
+  "Whether show `all-the-icons' or not.
+
+Non-nil to show the icons in mode-line.
+The icons may not be showed correctly in terminal and on Windows.")
 #+end_src
 ** Theme
 #+begin_src emacs-lisp :tangle yes :results silent
@@ -116,10 +123,13 @@ We expect the encoding to be LF UTF-8, so only show the modeline when this is no
 #+end_src
 ** Completion
 #+begin_src emacs-lisp :tangle yes :results silent
+
+(require 'company-tabnine)
+
 (after! company
   (setq +lsp-company-backends '(company-tabnine :separate company-capf company-yasnippet))
   (setq company-show-numbers t
-        company-idle-delay 0.5
+        company-idle-delay 0
         company-minimum-prefix-length 2
         company-show-quick-access t
         company-quick-access-modifier 'super))
