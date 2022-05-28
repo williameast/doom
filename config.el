@@ -66,8 +66,6 @@ The icons may not be showed correctly in terminal and on Windows.")
 
 (setq display-line-numbers-type 'relative)
 
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-
 (setq evil-vsplit-window-right t
       evil-split-window-below t)
 
@@ -86,7 +84,7 @@ The icons may not be showed correctly in terminal and on Windows.")
 (after! company
   (setq +lsp-company-backends '(company-tabnine :separate company-capf company-yasnippet))
   (setq company-show-numbers t
-        company-idle-delay 0
+        company-idle-delay 0.5
         company-minimum-prefix-length 2
         company-show-quick-access t
         company-quick-access-modifier 'super))

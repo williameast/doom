@@ -97,7 +97,7 @@ We expect the encoding to be LF UTF-8, so only show the modeline when this is no
 (setq display-line-numbers-type 'relative)
 #+end_src
 ** Start Maximized
-#+begin_src emacs-lisp :tangle yes :results silent
+#+begin_src emacs-lisp :tangle no :results silent
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 #+end_src
 ** Window Management
@@ -129,7 +129,7 @@ We expect the encoding to be LF UTF-8, so only show the modeline when this is no
 (after! company
   (setq +lsp-company-backends '(company-tabnine :separate company-capf company-yasnippet))
   (setq company-show-numbers t
-        company-idle-delay 0
+        company-idle-delay 0.5
         company-minimum-prefix-length 2
         company-show-quick-access t
         company-quick-access-modifier 'super))
