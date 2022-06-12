@@ -246,6 +246,17 @@ CLOSED: [2022-03-09 Wed 13:07]
 (after! geiser-mode
     (setq geiser-active-implementations '(mit)))
 #+end_src
+** R
+#+begin_src emacs-lisp :tangle yes :results silent
+(use-package! firestarter
+  :ensure t
+  :init
+  (firestater-mode)
+  :config
+  (setq firestarter-default-type t))
+#+end_src
+
+
 * Modules
 ** Org [2/3]
 *** General
