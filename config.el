@@ -130,12 +130,7 @@ The icons may not be showed correctly in terminal and on Windows.")
 (after! geiser-mode
     (setq geiser-active-implementations '(mit)))
 
-(use-package! firestarter
-  :ensure t
-  :init
-  (firestater-mode)
-  :config
-  (setq firestarter-default-type t))
+(use-package! nix-buffer)
 
 (setq org-use-property-inheritance t
       org-list-allow-alphabetical t
