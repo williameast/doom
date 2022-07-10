@@ -14,7 +14,6 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
 
@@ -67,3 +66,6 @@
   :recipe (:host github
            :repo "TommyX12/company-tabnine"
            :branch "master"))
+
+
+(package! beacon)

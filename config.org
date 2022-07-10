@@ -63,6 +63,11 @@ doom-unicode-font (font-spec :family "monospace" :size 12))
 Non-nil to show the icons in mode-line.
 The icons may not be showed correctly in terminal and on Windows.")
 #+end_src
+** Cursor
+#+begin_src emacs-lisp :tangle yes :results silent
+(beacon-mode 1)
+#+end_src
+
 ** Theme
 #+begin_src emacs-lisp :tangle yes :results silent
 (setq doom-theme 'doom-dracula
@@ -246,22 +251,6 @@ CLOSED: [2022-03-09 Wed 13:07]
 (after! geiser-mode
     (setq geiser-active-implementations '(mit)))
 #+end_src
-** BROKEN R
-#+begin_src emacs-lisp :tangle no :results silent
-(use-package! firestarter
-  :ensure t
-  :init
-  (firestater-mode)
-  :config
-  (setq firestarter-default-type t))
-#+end_src
-
-** Nix
-#+begin_src emacs-lisp :tangle yes :results silent
-(use-package! nix-buffer)
-#+end_src
-
-
 * Modules
 ** Org [2/3]
 *** General
@@ -621,6 +610,7 @@ CLOSED: [2021-04-10 Sat 12:30]
 #+begin_src emacs-lisp :tangle yes :results silent
 (require 'latex-preview-pane)
 (latex-preview-pane-enable)
+(setq csv-separator-separators '["," ";"])
 #+end_src
 ** Treemacs
 #+begin_src emacs-lisp :tangle yes :results silent
@@ -662,8 +652,8 @@ CLOSED: [2022-03-09 Wed 13:03]
  (:prefix-map ("d" . "dictionary")
   :desc "Change to german" "g" #'my/switch-to-de-dict
   :desc "Change to english" "e" #'my/switch-to-en-dict)
- ;; (:prefix ("f" . "file")
- ;;  :desc "Open neotree" "t" #'+neotree/open)
+ ;; (:prefix ("v" . "custom")
+ ;;  :desc "Open treemacs" "t" #'treemacs)
  )
 #+end_src
 ** org-mode
