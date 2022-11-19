@@ -44,7 +44,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(firestarter nix-buffer company-tabnine org-super-agenda org-appear latex-preview-pane doct))
+   '(all-the-icons firestarter nix-buffer company-tabnine org-super-agenda org-appear latex-preview-pane doct))
  '(warning-suppress-log-types '((ess-idle-timer-functions))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

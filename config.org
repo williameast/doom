@@ -353,7 +353,7 @@ CLOSED: [2022-03-09 Wed 13:07]
 #+end_src
 *** TODO Calendar
 *** Capture
-#+begin_src emacs-lisp :tangle yes :results silent
+#+begin_src emacs-lisp :tangle no :results silent
 (use-package! doct
   :commands (doct))
 
