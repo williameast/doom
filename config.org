@@ -70,7 +70,7 @@ The icons may not be showed correctly in terminal and on Windows.")
 
 ** Theme
 #+begin_src emacs-lisp :tangle yes :results silent
-(setq doom-theme 'doom-dracula
+(setq doom-theme 'doom-xcode
       doom-themes-enable-bold t)
 #+end_src
 ** Modeline
@@ -641,6 +641,19 @@ CLOSED: [2022-03-09 Wed 13:03]
                   (window-system . x))))
 
 #+end_src
+** Magit
+#+begin_src emacs-lisp :tangle yes :results silent
+(after! exec-path-from-shell
+  (add-to-list 'exec-path-from-shell-variables "SSH_AUTH_SOCK"))
+
+(defun set-ssh-auth-sock ()
+  "Set SSH_AUTH_SOCK environment variable."
+  (interactive)
+  (setenv "SSH_AUTH_SOCK" "/run/user/1000/keyring/ssh"))
+
+(add-hook 'emacs-startup-hook 'set-ssh-auth-sock)
+#+end_src
+
 
 * Keybindings
 ** Global
