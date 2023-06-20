@@ -3,26 +3,25 @@
 # key: texletter
 # --
 
-\documentclass[]{letter}
-\usepackage[english]{babel}
-
-
-\begin{document}
-% If you want headings on subsequent pages,
-% remove the ``%'' on the next line:
-% \pagestyle{headings}
-
-\begin{letter}{Line A \\ Line B \\ Line C}
-\address{William East \\ Skalitzer Strasse 42 \\ c/o Höhn \\ D-10245 Berlin}
-
-\opening{dear Sir}
-
+\documentclass{letter}
 \signature{William East}
+\address{William East\\ Skalitzer Str. 42 \\ 10997 Berlin}
+\begin{document}
+
+\begin{letter}{add1 \\ add2 \\ city \\ Postcode}
+
+
+  \opening{Dear XXX} % who are you addressing
+
+text goes here
 
 \closing{Sincerely,}
 
-%enclosure listing
-%\encl{Curriculum Vitae}
+\ps
+
+P.S. add your PS here
+
+\encl{Enclosed Items}
 
 \end{letter}
 \end{document}

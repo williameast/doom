@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: foot
+# key: foot
+# --
+\footnote{$0}

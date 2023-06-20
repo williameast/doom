@@ -661,6 +661,7 @@ CLOSED: [2022-03-09 Wed 13:03]
 (map!
  ("M-q" #'kill-current-buffer)
  ("M-w" #'save-buffer)
+ ("M-d" #'fill-paragraph)
  :leader
  (:prefix-map ("d" . "dictionary")
   :desc "Change to german" "g" #'my/switch-to-de-dict

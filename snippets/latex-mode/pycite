@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: pycite
+# key: pycite
+# --
+(\citeyear{$0})

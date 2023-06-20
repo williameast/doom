@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: yearcite
+# key: ycite
+# --
+\citeyear{$1}$2

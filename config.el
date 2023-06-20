@@ -45,7 +45,9 @@ doom-unicode-font (font-spec :family "monospace" :size 12))
 Non-nil to show the icons in mode-line.
 The icons may not be showed correctly in terminal and on Windows.")
 
-(setq doom-theme 'doom-dracula
+(beacon-mode 1)
+
+(setq doom-theme 'doom-xcode
       doom-themes-enable-bold t)
 
 (unless (equal "Battery Status not available"
@@ -129,8 +131,6 @@ The icons may not be showed correctly in terminal and on Windows.")
 
 (after! geiser-mode
     (setq geiser-active-implementations '(mit)))
-
-(use-package! nix-buffer)
 
 (setq org-use-property-inheritance t
       org-list-allow-alphabetical t
@@ -217,189 +217,6 @@ The icons may not be showed correctly in terminal and on Windows.")
   (setq org-log-done t)
   (setq org-log-into-drawer t))
 
-(use-package! doct
-  :commands (doct))
-
-(after! org-capture
-  (defun +doct-icon-declaration-to-icon (declaration)
-    "Convert :icon declaration to icon"
-    (let ((name (pop declaration))
-          (set  (intern (concat "all-the-icons-" (plist-get declaration :set))))
-          (face (intern (concat "all-the-icons-" (plist-get declaration :color))))
-          (v-adjust (or (plist-get declaration :v-adjust) 0.01)))
-      (apply set `(,name :face ,face :v-adjust ,v-adjust))))
-
-  (defun +doct-iconify-capture-templates (groups)
-    "Add declaration's :icon to each template group in GROUPS."
-    (let ((templates (doct-flatten-lists-in groups)))
-      (setq doct-templates (mapcar (lambda (template)
-                                     (when-let* ((props (nthcdr (if (= (length template) 4) 2 5) template))
-                                                 (spec (plist-get (plist-get props :doct) :icon)))
-                                       (setf (nth 1 template) (concat (+doct-icon-declaration-to-icon spec)
-                                                                      "\t"
-                                                                      (nth 1 template))))
-                                     template)
-                                   templates))))
-
-  (setq doct-after-conversion-functions '(+doct-iconify-capture-templates))
-
-  (defun set-org-capture-templates ()
-    (setq org-capture-templates
-          (doct `(("Personal todo" :keys "t"
-                   :icon ("checklist" :set "octicon" :color "green")
-                   :file +org-capture-todo-file
-                   :prepend t
-                   :headline "Inbox"
-                   :type entry
-                   :template ("* TODO %?"
-                              "%i %a")
-                   )
-                  ("Personal note" :keys "n"
-                   :icon ("sticky-note-o" :set "faicon" :color "green")
-                   :file +org-capture-todo-file
-                   :prepend t
-                   :headline "Inbox"
-                   :type entry
-                   :template ("* %?"
-                              "%i %a"))
-                  ;; ("Email" :keys "e"
-                  ;;  :icon ("envelope" :set "faicon" :color "blue")
-                  ;;  :file +org-capture-todo-file
-                  ;;  :prepend t
-                  ;;  :headline "Inbox"
-                  ;;  :type entry
-                  ;;  :template ("* TODO %^{type|reply to|contact} %\\3 %? :email:"
-                  ;;             "Send an email %^{urgancy|soon|ASAP|anon|at some point|eventually} to %^{recipiant}"
-                  ;;             "about %^{topic}"
-                  ;;             "%U %i %a"))
-                  ("Interesting" :keys "i"
-                   :icon ("eye" :set "faicon" :color "lcyan")
-                   :file +org-capture-todo-file
-                   :prepend t
-                   :headline "Interesting"
-                   :type entry
-                   :template ("* [ ] %{desc}%? :%{i-type}:"
-                              "%i %a")
-                   :children (("Webpage" :keys "w"
-                               :icon ("globe" :set "faicon" :color "green")
-                               :desc "%(org-cliplink-capture) "
-                               :i-type "read:web"
-                               )
-                              ("Article" :keys "a"
-                               :icon ("file-text" :set "octicon" :color "yellow")
-                               :desc ""
-                               :i-type "read:reaserch"
-                               )
-                              ("Information" :keys "i"
-                               :icon ("info-circle" :set "faicon" :color "blue")
-                               :desc ""
-                               :i-type "read:info"
-                               )
-                              ("Idea" :keys "I"
-                               :icon ("bubble_chart" :set "material" :color "silver")
-                               :desc ""
-                               :i-type "idea"
-                               )))
-                  ("Tasks" :keys "k"
-                   :icon ("inbox" :set "octicon" :color "yellow")
-                   :file +org-capture-todo-file
-                   :prepend t
-                   :headline "Tasks"
-                   :type entry
-                   :template ("* TODO %? %^G%{extra}"
-                              "%i %a")
-                   :children (("General Task" :keys "k"
-                               :icon ("inbox" :set "octicon" :color "yellow")
-                               :extra ""
-                               )
-                              ("Task with deadline" :keys "d"
-                               :icon ("timer" :set "material" :color "orange" :v-adjust -0.1)
-                               :extra "\nDEADLINE: %^{Deadline:}t"
-                               )
-                              ("Scheduled Task" :keys "s"
-                               :icon ("calendar" :set "octicon" :color "orange")
-                               :extra "\nSCHEDULED: %^{Start time:}t"
-                               )
-                              ))
-                  ("Stuff for Others" :keys "o"
-                   :icon ("person" :set "octicon" :color "yellow")
-                   :file +org-capture-todo-file
-                   :prepend t
-                   :headline "Stuff for others"
-                   :type entry
-                   :template ("* TODO %? %^G%{extra}"
-                              "%i %a")
-                   :children (("General Task" :keys "k"
-                               :icon ("inbox" :set "octicon" :color "yellow")
-                               :extra ""
-                               )
-                              ("Task with deadline" :keys "d"
-                               :icon ("timer" :set "material" :color "orange" :v-adjust -0.1)
-                               :extra "\nDEADLINE: %^{Deadline:}t"
-                               )
-                              ("Scheduled Task" :keys "s"
-                               :icon ("calendar" :set "octicon" :color "orange")
-                               :extra "\nSCHEDULED: %^{Start time:}t"
-                               )
-                              ))
-                  ("Project" :keys "p"
-                   :icon ("repo" :set "octicon" :color "silver")
-                   :prepend t
-                   :type entry
-                   :headline "Inbox"
-                   :template ("* %{time-or-todo} %?"
-                              "%i"
-                              "%a")
-                   :file ""
-                   :custom (:time-or-todo "")
-                   :children (("Project-local todo" :keys "t"
-                               :icon ("checklist" :set "octicon" :color "green")
-                               :time-or-todo "TODO"
-                               :file +org-capture-project-todo-file)
-                              ("Project-local note" :keys "n"
-                               :icon ("sticky-note" :set "faicon" :color "yellow")
-                               :time-or-todo "%U"
-                               :file +org-capture-project-notes-file)
-                              ("Project-local changelog" :keys "c"
-                               :icon ("list" :set "faicon" :color "blue")
-                               :time-or-todo "%U"
-                               :heading "Unreleased"
-                               :file +org-capture-project-changelog-file))
-                   )
-                  ("\tCentralised project templates"
-                   :keys "o"
-                   :type entry
-                   :prepend t
-                   :template ("* %{time-or-todo} %?"
-                              "%i"
-                              "%a")
-                   :children (("Project todo"
-                               :keys "t"
-                               :prepend nil
-                               :time-or-todo "TODO"
-                               :heading "Tasks"
-                               :file +org-capture-central-project-todo-file)
-                              ("Project note"
-                               :keys "n"
-                               :time-or-todo "%U"
-                               :heading "Notes"
-                               :file +org-capture-central-project-notes-file)
-                              ("Project changelog"
-                               :keys "c"
-                               :time-or-todo "%U"
-                               :heading "Unreleased"
-                               :file +org-capture-central-project-changelog-file))
-                   )))))
-
-  (set-org-capture-templates)
-  (unless (display-graphic-p)
-    (add-hook 'server-after-make-frame-hook
-              (defun org-capture-reinitialise-hook ()
-                (when (display-graphic-p)
-                  (set-org-capture-templates)
-                  (remove-hook 'server-after-make-frame-hook
-                               #'org-capture-reinitialise-hook))))))
-
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq org-export-with-smart-quotes t)
@@ -436,20 +253,32 @@ The icons may not be showed correctly in terminal and on Windows.")
 
 (require 'latex-preview-pane)
 (latex-preview-pane-enable)
+(setq csv-separator-separators '["," ";"])
 
 (setq +treemacs-git-mode 'deferred)
 
 (setq yas-triggers-in-field t)
 
+(after! exec-path-from-shell
+  (add-to-list 'exec-path-from-shell-variables "SSH_AUTH_SOCK"))
+
+(defun set-ssh-auth-sock ()
+  "Set SSH_AUTH_SOCK environment variable."
+  (interactive)
+  (setenv "SSH_AUTH_SOCK" "/run/user/1000/keyring/ssh"))
+
+(add-hook 'emacs-startup-hook 'set-ssh-auth-sock)
+
 (map!
  ("M-q" #'kill-current-buffer)
  ("M-w" #'save-buffer)
+ ("M-d" #'fill-paragraph)
  :leader
  (:prefix-map ("d" . "dictionary")
   :desc "Change to german" "g" #'my/switch-to-de-dict
   :desc "Change to english" "e" #'my/switch-to-en-dict)
- ;; (:prefix ("f" . "file")
- ;;  :desc "Open neotree" "t" #'+neotree/open)
+ ;; (:prefix ("v" . "custom")
+ ;;  :desc "Open treemacs" "t" #'treemacs)
  )
 
 (map!

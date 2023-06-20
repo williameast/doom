@@ -52,9 +52,23 @@
            :repo "skeeto/transcription-mode"))
 
 ;; org-appear, for toggling of emphasis elements in org mode individually
-(package! org-appear
-  :recipe (:host github
-           :repo "awth13/org-appear"))
+;; (package! org-appear
+;;   :recipe (:host github
+;;            :repo "awth13/org-appear"))
+
+(package! pdf-tools :recipe
+          (:host github
+                 :repo "dalanicolai/pdf-tools"
+                 :branch "pdf-roll"
+                 :files ("lisp/*.el"
+                         "README"
+                         ("build" "Makefile")
+                         ("build" "server")
+                         (:exclude "lisp/tablist.el" "lisp/tablist-filter.el"))))
+
+(package! image-roll :recipe
+          (:host github
+                 :repo "dalanicolai/image-roll.el"))
 
 (package! org-super-agenda)
 
