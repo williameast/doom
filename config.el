@@ -257,8 +257,6 @@ The icons may not be showed correctly in terminal and on Windows.")
 
 (setq +treemacs-git-mode 'deferred)
 
-(setq yas-triggers-in-field t)
-
 (after! exec-path-from-shell
   (add-to-list 'exec-path-from-shell-variables "SSH_AUTH_SOCK"))
 
@@ -273,10 +271,15 @@ The icons may not be showed correctly in terminal and on Windows.")
  ("M-q" #'kill-current-buffer)
  ("M-w" #'save-buffer)
  ("M-d" #'fill-paragraph)
+ ("M-s" #'up-list)
  :leader
- (:prefix-map ("d" . "dictionary")
+ (:desc "switch to treemacs" "-" #'treemacs-select-window)
+ (:prefix-map ("d" . "42")
   :desc "Change to german" "g" #'my/switch-to-de-dict
-  :desc "Change to english" "e" #'my/switch-to-en-dict)
+  :desc "Change to english" "e" #'my/switch-to-en-dict
+  :desc "Add comment box" "b" #'comments-insert-box
+  :desc "Add header" "h" #'header-insert
+  :desc "Add comment bar" "n" #'comments-insert-bar)
  ;; (:prefix ("v" . "custom")
  ;;  :desc "Open treemacs" "t" #'treemacs)
  )
@@ -287,8 +290,55 @@ The icons may not be showed correctly in terminal and on Windows.")
   (:prefix ("t" . "toggle/tangle")
    :desc "Tangle src blocks" "t" #'org-babel-tangle
    :desc "Jump to src block" "j" #'org-babel-tangle-jump
+   :desc "Run C program" "c" #'execute-c-program
+   :desc "Run C program without ftlib" "x" #'execute-c-program-without-ftlib
+   :desc "Tabify" "t" #'tabify
+   :desc "Open Treemacs" "a" #'treemacs
+   :desc "Run norminette" "n" #'run-norminette-on-current-buffer
    :desc "Detangle" "d" #'org-babel-detangle )
   (:prefix ("m" . "view")
    :desc "View exported file" "v" #'org-view-output-file )
   (:prefix ("a" . "archive")
    :desc "Archive tree" "a" )))
+
+(load "~/.config/doom/42/list.el")
+(load "~/.config/doom/42/string.el")
+(load "~/.config/doom/42/comments.el")
+(load "~/.config/doom/42/header.el")
+
+;; (require 'flycheck)
+;; (flycheck-define-checker norminette
+;;   :command ("normised" source)
+;;   :error-patterns
+;;   ((error line-start "Error (line " line ", col " column "): " (message) line-end))
+;;   :modes c-mode
+;;   :next-checkers ((error . c/c++-clang)
+;; 				  (warning . c/c++-cppcheck)))
+;; (add-to-list 'flycheck-checkers 'norminette)
+;;Run C programs directly from within emacs
+(defun execute-c-program ()
+  (interactive)
+  (defvar foo)
+  (setq foo (concat "cc -Wextra -Werror -Wall " (buffer-name) " libft.a && ./a.out" ))
+  (shell-command foo))
+
+(defun execute-c-program-without-ftlib ()
+  (interactive)
+  (defvar foo)
+  (setq foo (concat "cc -Wextra -Werror -Wall " (buffer-name) " && ./a.out" ))
+  (shell-command foo))
+
+(defun run-norminette-on-current-buffer ()
+  (interactive)
+  (defvar foo)
+  (setq foo (concat "norminette " (buffer-name) "" ))
+  (shell-command foo))
+
+(c-set-offset 'substatement-open 0)
+(setq c-default-style "linux"
+      c-basic-offset 4)
+
+;; this fixes the problem with the bases
+ (map! :after cc-mode
+      :map c-mode-base-map
+      "{" #'c-electric-brace)

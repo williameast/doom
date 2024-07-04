@@ -616,9 +616,10 @@ CLOSED: [2021-04-10 Sat 12:30]
 #+begin_src emacs-lisp :tangle yes :results silent
 (setq +treemacs-git-mode 'deferred)
 #+end_src
-** Yasnippet
-#+begin_src emacs-lisp :tangle yes :results silent
-(setq yas-triggers-in-field t)
+** DEACTIVATED Yasnippet
+CLOSED: [2023-12-28 Thu 16:33]
+#+begin_src emacs-lisp :tangle no :results silent
+(setq yas-triggers-in-field f)
 #+end_src
 ** DEACTIVATED Edit with Emacs
 CLOSED: [2022-03-09 Wed 13:03]
@@ -662,10 +663,15 @@ CLOSED: [2022-03-09 Wed 13:03]
  ("M-q" #'kill-current-buffer)
  ("M-w" #'save-buffer)
  ("M-d" #'fill-paragraph)
+ ("M-s" #'up-list)
  :leader
- (:prefix-map ("d" . "dictionary")
+ (:desc "switch to treemacs" "-" #'treemacs-select-window)
+ (:prefix-map ("d" . "42")
   :desc "Change to german" "g" #'my/switch-to-de-dict
-  :desc "Change to english" "e" #'my/switch-to-en-dict)
+  :desc "Change to english" "e" #'my/switch-to-en-dict
+  :desc "Add comment box" "b" #'comments-insert-box
+  :desc "Add header" "h" #'header-insert
+  :desc "Add comment bar" "n" #'comments-insert-bar)
  ;; (:prefix ("v" . "custom")
  ;;  :desc "Open treemacs" "t" #'treemacs)
  )
@@ -679,9 +685,59 @@ CLOSED: [2022-03-09 Wed 13:03]
   (:prefix ("t" . "toggle/tangle")
    :desc "Tangle src blocks" "t" #'org-babel-tangle
    :desc "Jump to src block" "j" #'org-babel-tangle-jump
+   :desc "Run C program" "c" #'execute-c-program
+   :desc "Run C program without ftlib" "x" #'execute-c-program-without-ftlib
+   :desc "Tabify" "t" #'tabify
+   :desc "Open Treemacs" "a" #'treemacs
+   :desc "Run norminette" "n" #'run-norminette-on-current-buffer
    :desc "Detangle" "d" #'org-babel-detangle )
   (:prefix ("m" . "view")
    :desc "View exported file" "v" #'org-view-output-file )
   (:prefix ("a" . "archive")
    :desc "Archive tree" "a" )))
 #+end_src
+
+** 42 related stuff
+#+begin_src emacs-lisp :tangle yes :results silent
+(load "~/.config/doom/42/list.el")
+(load "~/.config/doom/42/string.el")
+(load "~/.config/doom/42/comments.el")
+(load "~/.config/doom/42/header.el")
+
+;; (require 'flycheck)
+;; (flycheck-define-checker norminette
+;;   :command ("normised" source)
+;;   :error-patterns
+;;   ((error line-start "Error (line " line ", col " column "): " (message) line-end))
+;;   :modes c-mode
+;;   :next-checkers ((error . c/c++-clang)
+;; 				  (warning . c/c++-cppcheck)))
+;; (add-to-list 'flycheck-checkers 'norminette)
+;;Run C programs directly from within emacs
+(defun execute-c-program ()
+  (interactive)
+  (defvar foo)
+  (setq foo (concat "cc -Wextra -Werror -Wall " (buffer-name) " libft.a && ./a.out" ))
+  (shell-command foo))
+
+(defun execute-c-program-without-ftlib ()
+  (interactive)
+  (defvar foo)
+  (setq foo (concat "cc -Wextra -Werror -Wall " (buffer-name) " && ./a.out" ))
+  (shell-command foo))
+
+(defun run-norminette-on-current-buffer ()
+  (interactive)
+  (defvar foo)
+  (setq foo (concat "norminette " (buffer-name) "" ))
+  (shell-command foo))
+
+(c-set-offset 'substatement-open 0)
+(setq c-default-style "linux"
+      c-basic-offset 4)
+
+;; this fixes the problem with the bases
+ (map! :after cc-mode
+      :map c-mode-base-map
+      "{" #'c-electric-brace)
+ #+end_src
