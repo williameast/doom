@@ -1,0 +1,20 @@
+# key: en_letter
+# name: en_letter
+# --
+#+date: today
+
+#+options: toc:nil
+
+#+latex_header: \usepackage[osf]{Baskervaldx}
+
+#+latex_class: letter
+
+#+latex_header: \signature{William East}
+#+latex_header: \address{Skalitzer Straße 42, 10997 Berlin}
+
+#+latex: \begin{letter}{[${1:recipient address}}
+#+latex: \opening{Dear $2}
+
+
+#+latex: \closing{Sincerely,}
+#+latex: \end{letter}

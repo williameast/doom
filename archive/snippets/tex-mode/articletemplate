@@ -1,0 +1,63 @@
+# -*- mode: snippet -*-
+# name: articletemplate
+# key: articletemplate
+# --
+
+\documentclass{article}
+\linespread{2}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+	\apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+ \usepackage[utf8]{inputenc} % For use with utf8 encoding (e.g. é
+\usepackage[letterpaper, margin=1.1in, head=20.1pt]{geometry} % geometry package for greater control over the margins; specify margins of 1 inch and letterpaper (8.5 x 11), along with a longer heading
+%\usepackage[doublespacing]{setspace} % Set double spacing
+\usepackage{graphicx} % Necessary for inserting graphics
+
+% DOUBLE SPACE?
+% \usepackage[doublespacing]{setspace} % Set double spacing
+
+
+% BIBLIOGRAPHY
+\usepackage[authordate-trad,backend=biber]{biblatex-chicago}
+\addbibresource{lib.bib} % Specify where your .bib file is
+
+% Headers and footers
+\usepackage{scrlayer-scrpage} % package for improved footers and headers
+\clearpairofpagestyles % clear all defaults (location of page #)
+\lofoot{William East} % left footer
+\rofoot{Page \thepage} % right footer, page number
+\rohead{} % right, header
+
+\setlength{\textfloatsep}{5pt} % changes the after-figure padding - see the caption or layout packages for more functionality
+
+
+% Three packages for nice tables and figures
+\usepackage{booktabs}
+\usepackage{dcolumn}
+\usepackage{wrapfig}
+\usepackage{subfig} % For multiple figures side-by-side
+\usepackage{environ}
+\NewEnviron{myequation}{%
+	\begin{equation}
+	\scalebox{1.5}{$\BODY$}
+	\end{equation}
+}
+%opening
+
+
+\begin{document}
+	\title{TITLE GOES HERE}
+	\subtitle{SUBTITLE GOES HERE}
+	\author{William East}
+	\maketitle
+
+\begin{titlepage}
+	\maketitle
+  \end{titlepage}
+
+
+  \printbibliography
+  \end{document}

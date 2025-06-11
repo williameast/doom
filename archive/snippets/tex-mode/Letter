@@ -1,0 +1,27 @@
+# -*- mode: snippet -*-
+# name:Letter 
+# key: texletter
+# --
+
+\documentclass{letter}
+\signature{William East}
+\address{William East\\ Skalitzer Str. 42 \\ 10997 Berlin}
+\begin{document}
+
+\begin{letter}{add1 \\ add2 \\ city \\ Postcode}
+
+
+  \opening{Dear XXX} % who are you addressing
+
+text goes here
+
+\closing{Sincerely,}
+
+\ps
+
+P.S. add your PS here
+
+\encl{Enclosed Items}
+
+\end{letter}
+\end{document}

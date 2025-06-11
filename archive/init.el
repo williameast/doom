@@ -15,6 +15,8 @@
 ;;      directory (for easy access to its source code).
 
 (doom! :input
+       ;;chinese
+       ;;japanese
 
        :completion
        (company +childframe)    ; the ultimate code completion backend
@@ -26,7 +28,6 @@
             +childframe
             +fuzzy
             +prescient)               ; a search engine for love and life
-       vertico           ; the search engine of the future
 
        :ui
        deft              ; notational velocity for Emacs
@@ -35,7 +36,7 @@
        doom-quit         ; DOOM quit-message prompts when you quit Emacs
        fill-column       ; a `fill-column' indicator
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
-       hydra
+       ;;hydra
        indent-guides     ; highlighted indent columns
        modeline          ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink the current line after jumping
@@ -46,12 +47,11 @@
        pretty-code       ; ligatures or substitute text with pretty symbols
        ;;tabs              ; an tab bar for Emacs
        treemacs          ; a project drawer, like neotree but cooler
-       unicode           ; extended unicode support for various languages
-       (vc-gutter +pretty) ; vcs diff in the fringe
+       ;;unicode           ; extended unicode support for various languages
+       vc-gutter         ; vcs diff in the fringe
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
        window-select     ; visually switch windows
        workspaces        ; tab emulation, persistence & separate workspaces
-       smooth-scroll     ; So smooth you won't believe it's not butter
        ;;zen               ; distraction-free coding or writing
 
        :editor
@@ -61,10 +61,10 @@
        (format +onsave)  ; automated prettiness
        ;;god               ; run Emacs commands without modifier keys
        ;;lispy             ; vim for lisp, for people who don't like vim
-       multiple-cursors  ; editing in many places at once
+       ;;multiple-cursors  ; editing in many places at once
        ;;objed             ; text object editing for the innocent
        ;;parinfer          ; turn lisp into python, sort of
-       rotate-text       ; cycle region at point between text candidates
+       ;;rotate-text       ; cycle region at point between text candidates
        snippets          ; my elves. They type so I don't have to
        word-wrap         ; soft wrapping with language-aware indent
 
@@ -108,7 +108,6 @@
        ;;terraform         ; infrastructure as code
        ;;tmux              ; an API for interacting with tmux
        upload            ; map local to remote projects via ssh/ftp
-       llm               ; when I said you needed friends, I didn't mean...
 
        :lang
        ;;agda              ; types of types of types of types...
@@ -122,7 +121,7 @@
        ;;crystal           ; ruby at the speed of c
        ;;csharp            ; unity, .NET, and mono shenanigans
        data              ; config/data formats
-       ;; (dart +flutter)   ; paint ui and not much else
+       (dart +flutter)   ; paint ui and not much else
        ;;elixir            ; erlang done right
        ;;elm               ; care for a cup of TEA?
        emacs-lisp        ; drown in parentheses
@@ -181,13 +180,13 @@
        ;;terra             ; Earth and Moon in alignment for performance.
        web               ; the tubes
        :email
-       ;; mu4e
+       mu4e
        ;;notmuch
        ;;(wanderlust +gmail)
 
        :app
        calendar
-       irc               ; how neckbeards socialize
+       ;; irc               ; how neckbeards socialize
        ;;(rss +org)        ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
        everywhere
@@ -199,7 +198,7 @@
 
 
 
-;; ;; Setting emacs Transparency
-;; (set-frame-parameter (selected-frame) 'alpha '(95 95))
+;; Setting emacs Transparency
+(set-frame-parameter (selected-frame) 'alpha '(95 95))
 
-;; (add-to-list 'default-frame-alist '(alpha 95 95))
+(add-to-list 'default-frame-alist '(alpha 95 95))

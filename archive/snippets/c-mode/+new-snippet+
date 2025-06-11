@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: retn
+# key: retn
+# --
+if(!$0)
+return (NULL);

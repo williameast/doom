@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: acite
+# key: acite
+# --
+\citeauthor{$1}$2

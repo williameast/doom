@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: srcsu
+# uuid: srcsu
+# key: srcsu
+# --
+
+sh :dir (concat "/sudo::" (expand-file-name "data/code"))
