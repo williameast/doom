@@ -55,7 +55,6 @@ doom-unicode-font (font-spec :family "monospace" :size 12))
 (load "~/.doom.d/42/comments.el")
 (load "~/.doom.d/42/header.el")
 
-run norminette on a file
 (defun run-norminette-on-current-buffer ()
   (interactive)
   (defvar foo)
@@ -165,13 +164,11 @@ If FILEXT is provided, return files with extension FILEXT instead."
   :desc "Add comment bar" "n" #'comments-insert-bar
   :desc "Tabify" "t" #'tabify
   :desc "Open Treemacs" "a" #'treemacs
-  :desc "Run norminette" "n" #'run-norminette-on-current-buffer
- )
+  :desc "Run norminette" "n" #'run-norminette-on-current-buffer))
 
 (map!
- (:leader
-  (
-   :desc "Tabify" "t" #'tabify
-   :desc "Open Treemacs" "a" #'treemacs
-   :desc "Run norminette" "n" #'run-norminette-on-current-buffer)
-))
+ :map org-mode-map
+ :leader
+ (:desc "Tabify" "t" #'tabify
+  :desc "Open Treemacs" "a" #'treemacs
+  :desc "Run norminette" "n" #'run-norminette-on-current-buffer))

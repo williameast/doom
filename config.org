@@ -4,9 +4,7 @@
 #+TITLE: Literate Doom Emacs configuration
 
 
-
 * Personal info
-
 #+begin_src emacs-lisp :tangle yes :results silent
 (setq user-full-name "William East"
       user-mail-address "williameast@live.com")
@@ -61,13 +59,6 @@ when splitting.
 (setq +ivy-buffer-preview t)
 
 (setq window-combination-resize t)
-#+end_src
-** DEACTIVATED Auto-fill mode
-CLOSED: [2025-06-11 Wed 11:51]
-so this hardwraps lines but im not sure it is what i want.
-
-#+begin_src emacs-lisp :tangle no :results silent
-;; (add-hook! 'text-mode-hook 'auto-fill-mode)
 #+end_src
 ** TODO Completion
 ** Transparency
@@ -128,7 +119,6 @@ load the 42 headers.
 #+end_src
 *** norminette
 #+begin_src emacs-lisp :tangle yes :results silent
-run norminette on a file
 (defun run-norminette-on-current-buffer ()
   (interactive)
   (defvar foo)
@@ -262,16 +252,14 @@ If FILEXT is provided, return files with extension FILEXT instead."
   :desc "Add comment bar" "n" #'comments-insert-bar
   :desc "Tabify" "t" #'tabify
   :desc "Open Treemacs" "a" #'treemacs
-  :desc "Run norminette" "n" #'run-norminette-on-current-buffer
- )
+  :desc "Run norminette" "n" #'run-norminette-on-current-buffer))
 #+end_src
 ** org-mode
 #+begin_src emacs-lisp :tangle yes :results silent
 (map!
- (:leader
-  (
-   :desc "Tabify" "t" #'tabify
-   :desc "Open Treemacs" "a" #'treemacs
-   :desc "Run norminette" "n" #'run-norminette-on-current-buffer)
-))
+ :map org-mode-map
+ :leader
+ (:desc "Tabify" "t" #'tabify
+  :desc "Open Treemacs" "a" #'treemacs
+  :desc "Run norminette" "n" #'run-norminette-on-current-buffer))
 #+end_src
