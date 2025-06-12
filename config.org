@@ -106,6 +106,9 @@ Function to make emacs transparent.
   (c-set-offset 'brace-list-open 0)
   (c-set-offset 'statement-case-open 0))
 #+end_src
+
+need to still set up the formatter.
+
 *** TODO Python
 ** TODO Debugging
 ** School42
