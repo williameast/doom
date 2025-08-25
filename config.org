@@ -105,12 +105,45 @@ Function to make emacs transparent.
   (c-set-offset 'substatement-open 0)
   (c-set-offset 'brace-list-open 0)
   (c-set-offset 'statement-case-open 0))
+
+(after! lsp-clangd
+  (setq lsp-clients-clangd-args
+        '("--compile-commands-dir=.")))
 #+end_src
 
-need to still set up the formatter.
+
 
 *** TODO Python
 ** TODO Debugging
+#+begin_src emacs-lisp :tangle yes :results silent
+(after! dap-mode
+  (require 'dap-gdb-lldb)
+  (dap-gdb-lldb-setup)
+
+  (setq dap-auto-configure-features '(sessions locals controls tooltip))
+
+
+(dap-register-debug-template "GDB::Run"
+                            (list :type "gdb"
+                                :request "launch"
+                                :name "GDB::Run"
+                                :gdbpath "gdb"
+                                :target nil
+                                :cwd nil)))
+
+(use-package! dap-mode
+  :config
+  (require 'dap-lldb)
+  (dap-register-debug-template "C++ :: LLDB Run"
+    (list :type "lldb"
+          :request "launch"
+          :name "C++ Debug"
+          :program "${workspaceFolder}/myprog"
+          :cwd "${workspaceFolder}"
+          :args [])))
+
+#+end_src
+
 ** School42
 *** 42 header
 load the 42 headers.
@@ -128,7 +161,34 @@ load the 42 headers.
   (setq foo (concat "nm " (buffer-name) "" ))
   (shell-command foo))
 #+end_src
-*** TODO integrate the C_formatter_42
+*** integrate the C_formatter_42
+#+begin_src emacs-lisp :tangle yes :results silent
+(defun c-format-42 (&optional start end)
+  "Format the current buffer or region using c_formatter_42.
+If START and END are given, only format that region."
+  (interactive "r")
+  (let ((formatter "c_formatter_42")
+        (buffer (current-buffer))
+        (point (point))
+        (window-start (window-start)))
+    (unless (executable-find formatter)
+      (error "Could not find c_formatter_42. Is it installed?"))
+    (if (use-region-p)
+        (shell-command-on-region start end formatter buffer t)
+      (shell-command-on-region (point-min) (point-max) formatter buffer t))
+    (goto-char point)
+    (set-window-start (selected-window) window-start)))
+
+#+end_src
+** direnv
+#+begin_src emacs-lisp :tangle yes :results silent
+(use-package! envrc
+  :hook (prog-mode . envrc-mode))
+
+(after! lsp-clangd
+  (setq lsp-clients-clangd-executable "clangd"))
+#+end_src
+
 * Mode-specific
 ** TESTING git
 this mitigates the problem where the SSH authorisation doesnt let you push from
@@ -237,6 +297,17 @@ If FILEXT is provided, return files with extension FILEXT instead."
 
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)  ;; with AUCTeX LaTeX mode
 #+end_src
+
+* Claude Code Integration
+Integrates Claude Code CLI with Emacs for AI-powered coding assistance.
+#+begin_src emacs-lisp :tangle yes :results silent
+(use-package! claude-code
+  :vc (:url "https://github.com/stevemolitor/claude-code.el" :rev :newest)
+  :config
+  (claude-code-mode)
+  (setq claude-code-terminal-backend 'eat))
+#+end_src
+
 * Key bindings
 ** Global
 #+begin_src emacs-lisp :tangle yes :results silent
@@ -250,19 +321,34 @@ If FILEXT is provided, return files with extension FILEXT instead."
  (:prefix-map ("z" . "Custom")
   :desc "Change to german" "g" #'my/switch-to-de-dict
   :desc "Change to english" "e" #'my/switch-to-en-dict
-  :desc "Add comment box" "b" #'comments-insert-box
-  :desc "Add header" "h" #'header-insert
-  :desc "Add comment bar" "n" #'comments-insert-bar
-  :desc "Tabify" "t" #'tabify
-  :desc "Open Treemacs" "a" #'treemacs
-  :desc "Run norminette" "n" #'run-norminette-on-current-buffer))
+  :desc "Open Treemacs" "a" #'treemacs)
+ (:prefix-map ("c" . "claude-code")
+  :desc "Start Claude" "c" #'claude-code
+  :desc "Send command" "s" #'claude-code-send-command
+  :desc "Send region" "r" #'claude-code-send-region
+  :desc "Fix error at point" "e" #'claude-code-fix-error-at-point
+  :desc "Send return" "y" #'claude-code-send-return
+  :desc "Send buffer" "b" #'claude-code-send-buffer))
 #+end_src
-** org-mode
+** c-mode
 #+begin_src emacs-lisp :tangle yes :results silent
-(map!
- :map org-mode-map
- :leader
- (:desc "Tabify" "t" #'tabify
-  :desc "Open Treemacs" "a" #'treemacs
-  :desc "Run norminette" "n" #'run-norminette-on-current-buffer))
+(map! :map c-mode-map
+      :leader
+      (:prefix ("z" . "42")
+       :desc "Format buffer/region " "f" #'c-format-42
+       :desc "Tabify" "t" #'tabify
+       :desc "Run norminette" "n" #'run-norminette-on-current-buffer
+       :desc "Add comment box" "b" #'comments-insert-box
+       :desc "Add header" "h" #'header-insert
+       :desc "Add comment bar" "c" #'comments-insert-bar)
+      (:prefix ("d" . "debug")
+       :desc "Start debugging" "d" #'dap-debug
+       :desc "Debug last configuration" "l" #'dap-debug-last
+       :desc "Toggle breakpoint" "b" #'dap-breakpoint-toggle
+       :desc "Continue" "c" #'dap-continue
+       :desc "Step in" "i" #'dap-step-in
+       :desc "Step out" "o" #'dap-step-out
+       :desc "Step over" "s" #'dap-step-over
+       :desc "Disconnect" "q" #'dap-disconnect))
+
 #+end_src
