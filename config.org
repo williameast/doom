@@ -203,7 +203,7 @@ function to add transparent window.
 ** School42
 *** 42 header
 load the 42 headers.
-#+begin_src emacs-lisp :tangle yes :results silent
+#+begin_src emacs-lisp :tangle no :results silent
 (load "~/.doom.d/42/list.el")
 (load "~/.doom.d/42/string.el")
 (load "~/.doom.d/42/comments.el")
