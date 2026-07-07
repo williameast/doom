@@ -18,3 +18,12 @@
 (package! dap-mode)
 ;; show me where I am using a blinking cursor!
 (package! beacon)
+
+;; Claude Code integration
+(package! monet
+  :recipe (:host github
+           :repo "stevemolitor/monet"))
+
+(package! claude-code
+  :recipe (:host github
+           :repo "stevemolitor/claude-code.el"))

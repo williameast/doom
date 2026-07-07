@@ -21,33 +21,63 @@ where projectile looks for projects.
 #+begin_src emacs-lisp :tangle yes :results silent
 (setq auto-save-default t)
 #+end_src
-* User interface
+* User Interface
+** Fonts
+#+begin_src emacs-lisp :tangle yes :results silent
+(setq doom-font (font-spec :family "JetBrainsMono" :size 24)
+doom-unicode-font (font-spec :family "monospace" :size 18))
+
+
+(defvar doom-modeline-icon (display-graphic-p)
+  "Whether show `all-the-icons' or not.
+
+Non-nil to show the icons in mode-line.
+The icons may not be showed correctly in terminal and on Windows.")
+#+end_src
+** Cursor
+#+begin_src emacs-lisp :tangle yes :results silent
+(beacon-mode 1)
+#+end_src
+
 ** Theme
 #+begin_src emacs-lisp :tangle yes :results silent
 (setq doom-theme 'doom-xcode
       doom-themes-enable-bold t)
 #+end_src
-** TESTING Font
-not sure what I am using the modeline icon thing for.
+** Modeline
+*** Battery indicator
 #+begin_src emacs-lisp :tangle yes :results silent
-(setq doom-font (font-spec :family "JetBrainsMono" :size 14)
-doom-unicode-font (font-spec :family "monospace" :size 12))
-
-(defvar doom-modeline-icon (display-graphic-p))
+(unless (equal "Battery Status not available"
+               (battery))
+  (display-battery-mode 1))
 #+end_src
-** Cursor
-a blinker that lets you know where you are!
+*** Time Display
 #+begin_src emacs-lisp :tangle yes :results silent
-(beacon-mode 1)
+(display-time-mode 1)
+
+(setq display-time-24hr-format t
+      display-time-default-load-average nil)
+#+end_src
+*** Encoding indicator
+We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case
+#+begin_src emacs-lisp :tangle yes :results silent
+(defun doom-modeline-conditional-buffer-encoding ()
+  (setq-local doom-modeline-buffer-encoding
+              (unless (or (eq buffer-file-coding-system 'utf-8-unix)
+                          (eq buffer-file-coding-system 'utf-8)))))
+
+(add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
 #+end_src
 ** Sideline
-Configure if you want absolute or relative line numbers.
 #+begin_src emacs-lisp :tangle yes :results silent
-(setq display-line-numbers-type 'absolute)
+(setq display-line-numbers-type 'relative)
 #+end_src
-** Window management
-show a preview of the window when selecting a split. take space from all windows
-when splitting.
+** Start Maximized
+#+begin_src emacs-lisp :tangle no :results silent
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+#+end_src
+** Window Management
+*** Preview buffers when splitting windows
 #+begin_src emacs-lisp :tangle yes :results silent
 (setq evil-vsplit-window-right t
       evil-split-window-below t)
@@ -57,12 +87,38 @@ when splitting.
   (+ivy/switch-buffer))
 
 (setq +ivy-buffer-preview t)
-
+#+end_src
+*** Take window space from all windows when splitting
+#+begin_src emacs-lisp :tangle yes :results silent
 (setq window-combination-resize t)
 #+end_src
-** TODO Completion
+
+** Auto-fill mode
+#+begin_src emacs-lisp :tangle yes :results silent
+(add-hook! 'text-mode-hook 'auto-fill-mode)
+#+end_src
+** Completion
+#+begin_src emacs-lisp :tangle yes :results silent
+
+;; (require 'company-tabnine)
+
+;; (after! company
+;;   (setq +lsp-company-backends '(company-tabnine :separate company-capf company-yasnippet))
+;;   (setq company-show-numbers t
+;;         company-idle-delay 0.5
+;;         company-minimum-prefix-length 2
+;;         company-show-quick-access t
+;;         company-quick-access-modifier 'super))
+
+
+;; (setq-default history-length 1000)
+;; (setq-default prescient-history-length 1000)
+
+(after! company-box
+  (setq company-box-max-candidates 10))
+#+end_src
 ** Transparency
-Function to make emacs transparent.
+function to add transparent window.
 #+begin_src emacs-lisp :tangle no :results silent
 (defun toggle-transparency ()
   "Toggle the background to be transparent or not."
@@ -298,17 +354,24 @@ If FILEXT is provided, return files with extension FILEXT instead."
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)  ;; with AUCTeX LaTeX mode
 #+end_src
 
-* Claude Code Integration
-Integrates Claude Code CLI with Emacs for AI-powered coding assistance.
+* Key bindings
+*** PDF-tools
 #+begin_src emacs-lisp :tangle yes :results silent
-(use-package! claude-code
-  :vc (:url "https://github.com/stevemolitor/claude-code.el" :rev :newest)
-  :config
-  (claude-code-mode)
-  (setq claude-code-terminal-backend 'eat))
+(use-package pdf-view
+  :hook (pdf-tools-enabled . pdf-view-themed-minor-mode)
+  :init
+  ;; Use the epdfinfo server built hermetically by nixpkgs (see nix-config's
+  ;; modules/home/dev/emacs.nix) instead of letting pdf-tools try to compile
+  ;; its own, which fails by mixing the system gcc with nixpkgs' poppler-glib.
+  (setq pdf-info-epdfinfo-program (executable-find "epdfinfo")))
 #+end_src
 
-* Key bindings
+*** Latex
+#+begin_src emacs-lisp :tangle yes :results silent
+(require 'latex-preview-pane)
+(latex-preview-pane-enable)
+(setq csv-separator-separators '["," ";"])
+#+end_src
 ** Global
 #+begin_src emacs-lisp :tangle yes :results silent
 (map!
@@ -351,4 +414,60 @@ Integrates Claude Code CLI with Emacs for AI-powered coding assistance.
        :desc "Step over" "s" #'dap-step-over
        :desc "Disconnect" "q" #'dap-disconnect))
 
+#+end_src
+
+* Claude Code
+Claude Code integration for AI-assisted programming.
+** Setup
+#+begin_src emacs-lisp :tangle yes :results silent
+(use-package! monet
+  :config
+  (monet-mode 1))
+
+(use-package! claude-code
+  :after monet
+  :config
+  ;; IDE integration with Monet for file operations
+  (add-hook 'claude-code-process-environment-functions #'monet-start-server-function)
+  (setq claude-code-terminal-backend 'vterm)
+  (claude-code-mode 1))
+
+
+#+end_src
+
+** Smart Toggle
+#+begin_src emacs-lisp :tangle yes :results silent
+(defun my/claude-code-smart-toggle ()
+  "Start Claude Code if not running, otherwise toggle its visibility."
+  (interactive)
+  (if (claude-code--find-claude-buffers-for-directory (claude-code--directory))
+      (claude-code-toggle)
+    (claude-code)))
+
+(defun my/claude-code-here ()
+  "Open Claude Code in a regular window, not a popup."
+  (interactive)
+  (let* ((dir (claude-code--directory))
+         (existing-buf (car (claude-code--find-claude-buffers-for-directory dir))))
+    (if existing-buf
+        (switch-to-buffer existing-buf)
+      ;; Start claude-code, then move the buffer to a regular window
+      (claude-code)
+      (when-let ((buf (car (claude-code--find-claude-buffers-for-directory dir))))
+        (+popup/close)
+        (switch-to-buffer buf)))))
+#+end_src
+
+** Keybindings
+#+begin_src emacs-lisp :tangle yes :results silent
+(map!
+ :leader
+ (:prefix-map ("v" . "claude")
+  :desc "Send region to Claude" "c" #'claude-code-send-region
+  :desc "Continue conversation" "r" #'claude-code-continue
+  :desc "Resume session" "s" #'claude-code-resume
+  :desc "Fix error at point" "e" #'claude-code-fix-error-at-point
+  :desc "Toggle Claude Code" "v" #'my/claude-code-smart-toggle
+  :desc "Claude Code here" "V" #'my/claude-code-here
+  :desc "Kill Claude" "k" #'claude-code-kill))
 #+end_src
